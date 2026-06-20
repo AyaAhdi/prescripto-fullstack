@@ -1,21 +1,20 @@
 pipeline {
-    agent any
+    agent any // Jenkins peut utiliser n'importe quel agent disponible
+    
+    // On dit à Jenkins d'utiliser l'outil Maven qu'on vient d'appeler M3
+    tools {
+        maven 'M3'
+    }
 
     stages {
-        stage('Checkout Code') {
+        // Notre première étape !
+        stage('Build & Test') {
             steps {
-                echo 'Configuration de Git et récupération du projet...'
-                script {
-                    // Cette commande magique dit à Jenkins d'accepter GitHub sans bloquer
-                    env.GIT_SSH_COMMAND = "ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no"
+                // On se place dans le bon dossier
+                dir('backend') {
+                    // On compile et on lance les tests JUnit
+                    sh 'mvn clean verify'
                 }
-                checkout scmGit(
-                    branches: [[name: '*/main']], 
-                    userRemoteConfigs: [[
-                        url: 'git@github.com:AyaAhdi/prescripto-fullstack.git', 
-                        credentialsId: 'github-ssh-key'
-                    ]]
-                )
             }
         }
     }
