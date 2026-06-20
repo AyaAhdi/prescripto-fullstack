@@ -1,19 +1,15 @@
-# --- ETAPE 1 : BUILD ---
-FROM maven:3.8.6-openjdk-8 AS builder
-WORKDIR /app
-COPY pom.xml .
-COPY src ./src
-RUN mvn clean package -DskipTests
+# Utiliser l'image officielle Tomcat avec Java 8 ou 11
+FROM tomcat:9.0-jdk11-corretto
 
-# --- ETAPE 2 : EXECUTION ---
-# On utilise Tomcat 9 (version "alpine" ultra-légère et sécurisée)
-FROM tomcat:9-jre8-alpine
-
-# Bonne pratique de sécurité : on efface les applications d'exemple par défaut de Tomcat
+# Supprimer les applications par défaut de Tomcat pour faire de la place
 RUN rm -rf /usr/local/tomcat/webapps/*
 
-# On récupère le .war de l'étape 1 et on le place dans le dossier "webapps". 
-# On le renomme ROOT.war pour qu'il soit accessible directement à la racine de l'URL !
-COPY --from=builder /app/target/backend.war /usr/local/tomcat/webapps/ROOT.war
+# Copier le fichier backend.war généré par Jenkins dans le dossier de déploiement de Tomcat
+# On le renomme 'ROOT.war' pour qu'il soit accessible directement à la racine de l'URL
+COPY target/backend.war /usr/local/tomcat/webapps/ROOT.war
 
+# Exposer le port par défaut de Tomcat
 EXPOSE 8080
+
+# Lancer le serveur Tomcat
+CMD ["catalina.sh", "run"]
