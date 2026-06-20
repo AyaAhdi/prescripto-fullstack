@@ -1,0 +1,1389 @@
+\documentclass[a4paper,12pt]{extarticle}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{caption}
+\usepackage[french]{babel}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{geometry}
+\setlength{\marginparwidth}{2cm}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tocloft}
+\usepackage{setspace}
+\usepackage{mdframed}
+\usepackage{listings}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{colortbl}
+\usepackage{amssymb}
+\usepackage{bookmark}
+
+\geometry{
+  a4paper,
+  top=2.5cm,
+  bottom=2.5cm,
+  left=3cm,
+  right=2.5cm
+}
+
+% ── Couleurs IGA ──────────────────────────────────────────────
+\definecolor{igablue}{RGB}{26, 47, 93}
+\definecolor{igalightblue}{RGB}{52, 100, 164}
+\definecolor{igaaccent}{RGB}{210, 125, 76}
+\definecolor{lightgray}{RGB}{245, 245, 245}
+\definecolor{codegray}{RGB}{100,100,100}
+
+% ── En-tête / pied de page ────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\small\color{igablue}Développement d'une plateforme de prise de rendez-vous médicaux en ligne}
+\rhead{\small\color{igablue}IGA}
+\cfoot{\small\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ── Titres de chapitres ───────────────────────────────────────
+\titleformat{\section}[block]
+  {\Large\bfseries\color{igablue}}
+  {\thesection.}{0.5em}{}
+  [\vspace{-0.3em}\rule{\textwidth}{0.5pt}]
+
+\titleformat{\subsection}[block]
+  {\large\bfseries\color{igalightblue}}
+  {\thesubsection.}{0.5em}{}
+
+\titleformat{\subsubsection}[block]
+  {\normalsize\bfseries\color{igablue}}
+  {\thesubsubsection.}{0.5em}{}
+
+% ── Boîtes d'encadré ──────────────────────────────────────────
+\newmdenv[
+  linecolor=igablue,
+  linewidth=1.5pt,
+  frametitle={\color{igablue}\bfseries Définition},
+  frametitlebackgroundcolor=lightgray,
+  backgroundcolor=lightgray!60,
+  roundcorner=4pt,
+  skipabove=8pt,
+  skipbelow=8pt
+]{defbox}
+
+\newmdenv[
+  linecolor=igaaccent,
+  linewidth=1.5pt,
+  backgroundcolor=igaaccent!8,
+  roundcorner=4pt,
+  skipabove=8pt,
+  skipbelow=8pt
+]{notebox}
+
+% ── Listings (code) ───────────────────────────────────────────
+\lstset{
+  basicstyle=\small\ttfamily,
+  backgroundcolor=\color{lightgray},
+  frame=single,
+  rulecolor=\color{igablue!30},
+  breaklines=true,
+  numbers=left,
+  numberstyle=\tiny\color{codegray},
+  keywordstyle=\color{igablue}\bfseries,
+  commentstyle=\color{igaaccent}\itshape,
+  stringstyle=\color{igalightblue}
+}
+
+% ── Interligne ────────────────────────────────────────────────
+\setstretch{1.3}
+
+\setlength{\parindent}{0.4pt}
+\setlength{\parskip}{4pt}
+
+% ─────────────────────────────────────────────────────────────
+%  DOCUMENT
+% ─────────────────────────────────────────────────────────────
+\setlength{\headheight}{13.6pt}
+\begin{document}
+
+% ══════════════════════════════════════════════════════════════
+%  PAGE DE GARDE
+% ══════════════════════════════════════════════════════════════
+\begin{titlepage}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+% Géométrie interne de la page de garde
+\setlength{\topmargin}{-1cm}
+
+\center
+
+\vspace*{1cm}
+
+% ── Logo ──────────────────────────────────────────────────────
+\includegraphics[width=0.28\textwidth]{Logo.png}\\[0.5cm]
+
+% ── Établissement & filière ───────────────────────────────────
+{\large\bfseries\color{igablue} Institut Supérieur du Génie Appliqué}\\[0.3cm]
+{\large\color{igablue} Projet de Développement Web avec JEE}\\[1.5cm]
+
+% ── Titre encadré ─────────────────────────────────────────────
+\HRule\\[0.5cm]
+{\huge\bfseries\color{igablue}
+  Développement d'une plateforme\\[0.2cm]
+  de prise de rendez-vous médicaux en ligne
+}\\[0.5cm]
+\HRule\\[1.5cm]
+
+% ── Niveau ────────────────────────────────────────────────────
+{\large\bfseries\color{igablue} 2\textsuperscript{ème} Année — Ingénierie Informatique (DLTI)}\\[1cm]
+
+% ── Auteurs / Encadrants ──────────────────────────────────────
+\begin{minipage}[t]{0.45\textwidth}
+  \raggedright
+  {\large\bfseries\color{igablue} Réalisé par~:}\\[0.4cm]
+  {\normalsize
+    Aya Ahdi\\[0.15cm]
+    Chadi Hamraoui\\[0.15cm]
+    Doha Bouhali
+  }
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
+  \raggedleft
+  {\large\bfseries\color{igablue} Encadré par~:}\\[0.4cm]
+  {\normalsize
+    Pr.~ZAOUI Chaymae\\[0.15cm]
+  }
+\end{minipage}
+
+\vfill
+
+% ── Année universitaire ───────────────────────────────────────
+\HRule\\[0.4cm]
+{\large\color{igablue}\bfseries Année Universitaire 2025 / 2026}\\[0.3cm]
+
+\end{titlepage}
+
+% ══════════════════════════════════════════════════════════════
+%  DÉDICACE
+% ══════════════════════════════════════════════════════════════
+\newpage
+\thispagestyle{empty}
+\section*{Dédicace}
+\addcontentsline{toc}{section}{Dédicace}
+
+\begin{center}
+\textit{\color{igablue}\large« À nos familles, source inépuisable de soutien et d'encouragement. »}
+\end{center}
+
+\vspace{1.5cm}
+Nous dédions ce travail à nos parents, qui n'ont jamais cessé de croire en nous et de nous soutenir tout au long de notre parcours académique. Leur sacrifice, leur amour et leur confiance indéfectible ont été notre moteur dans les moments les plus exigeants de cette formation.
+
+À nos enseignants qui, par leur rigueur et leur bienveillance, ont façonné notre manière de penser et d'aborder les problèmes complexes. À nos camarades de promotion avec lesquels nous avons partagé bien plus que des cours : des défis, des fous rires et une ambition commune de réussir.
+
+\vfill
+
+% ══════════════════════════════════════════════════════════════
+%  REMERCIEMENTS
+% ══════════════════════════════════════════════════════════════
+\newpage
+\thispagestyle{empty}
+\section*{Remerciements}
+\addcontentsline{toc}{section}{Remerciements}
+
+Nous tenons à exprimer nos sincères remerciements à toutes les personnes qui ont contribué, de près ou de loin, à la réalisation de ce projet.
+
+Nos premiers remerciements s'adressent à notre encadrante,  \textbf{Mme ZAOUI Chaymae},  pour sa disponibilité, ses conseils avisés et son suivi régulier tout au long de ce travail. Son expertise et sa pédagogie ont été déterminantes dans la conduite de ce projet.
+
+Nous remercions également l'ensemble du corps enseignant de l'\textbf{Institut Supérieur du Génie Appliqué (IGA)}  pour la qualité de la formation dispensée et les fondements techniques qui nous ont permis de mener à bien ce projet.
+
+Enfin, nous exprimons notre reconnaissance à toutes les personnes qui ont participé aux tests de l'application et dont les retours nous ont permis d'améliorer la qualité du produit final.
+
+\vfill
+
+% ══════════════════════════════════════════════════════════════
+%  RÉSUMÉ
+% ══════════════════════════════════════════════════════════════
+\newpage
+\thispagestyle{empty}
+\section*{Résumé}
+\addcontentsline{toc}{section}{Résumé}
+
+Ce projet de fin d'études porte sur la conception et le développement de \textbf{Prescripto}, une plateforme innovante de gestion de rendez-vous médicaux.
+
+Face aux limites des systèmes de santé actuels — caractérisés par des prises de rendez-vous téléphoniques fastidieuses et un manque de visibilité sur les disponibilités des praticiens — notre solution propose une plateforme complète permettant de mettre en relation patients et médecins.
+
+L'architecture repose sur \textbf{React js} pour le frontend, \textbf{Java EE (JEE)} pour le backend (Servlets/DAO), et \textbf{MySQL} comme système de gestion de base de données. La plateforme se distingue par une gestion simplifiée du flux de paiement (Paiement à la clinique par carte ou espèces) et une interface intuitive permettant une recherche multicritère par spécialité médicale.
+
+\textbf{Mots-clés~:} Santé numérique, JEE, React, MVC, Gestion de rendez-vous, MySQL, Architecture logicielle.
+
+
+
+
+
+% ══════════════════════════════════════════════════════════════
+%  ABSTRACT
+% ══════════════════════════════════════════════════════════════
+\newpage
+\thispagestyle{empty}
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+
+This end-of-study project focuses on the design and development of \textbf{Prescripto}, an innovative platform for online medical appointment management.
+
+Faced with the limitations of current healthcare booking systems — typically characterized by tedious phone calls and a lack of real-time visibility into practitioners' availability — our solution provides a comprehensive platform that seamlessly connects patients and physicians.
+
+The system architecture relies on \textbf{React js} for the frontend, \textbf{Java EE (JEE)} for the backend (Servlets/DAO), and \textbf{MySQL} for database management. The platform features an automated payment workflow management (in-clinic payment by card or cash) and an intuitive interface designed for multi-criteria searches based on medical specialties.
+
+\vspace{0.8cm}
+\textbf{Keywords:} Digital Health, JEE, React, MVC, Appointment Management, MySQL, Software Architecture.
+
+\vfill
+
+% ══════════════════════════════════════════════════════════════
+%  TABLES DES MATIÈRES / FIGURES
+% ══════════════════════════════════════════════════════════════
+\renewcommand{\listfigurename}{Liste des figures}
+\renewcommand{\listtablename}{Liste des tableaux}
+\tableofcontents
+\newpage
+\listoffigures
+\addcontentsline{toc}{section}{Liste des figures}
+\newpage
+\listoftables
+\addcontentsline{toc}{section}{Liste des tableaux}
+\newpage
+
+% ── Liste des sigles ──────────────────────────────────────────
+\section*{Liste des sigles et acronymes}
+\addcontentsline{toc}{section}{Liste des sigles et acronymes}
+
+\begin{tabular}{ll}
+\toprule
+\textbf{Sigle} & \textbf{Signification} \\
+\midrule
+API  & Application Programming Interface \\
+BDD  & Base De Données \\
+DAO  & Data Access Object \\
+DTO  & Data Transfer Object \\
+CRUD & Create, Read, Update, Delete \\
+IGA  & Institut Supérieur du Génie Appliqué \\
+MVC  & Modèle-Vue-Contrôleur \\
+JEE  & Java Enterprise Edition \\
+REST & Representational State Transfer \\
+UML  & Unified Modeling Language \\
+UI   & User Interface \\
+UX   & User Experience \\
+\bottomrule
+\end{tabular}
+
+\newpage
+\pagenumbering{arabic}
+
+% ══════════════════════════════════════════════════════════════
+%   INTRODUCTION GÉNÉRALE
+% ══════════════════════════════════════════════════════════════
+\section*{Introduction Générale}
+\phantomsection % <--- Ajoutez cette ligne ici
+\addcontentsline{toc}{section}{Introduction Générale}
+\markboth{Introduction Générale}{Introduction Générale}
+
+La transformation numérique a profondément redéfini l'accès aux services essentiels, plaçant le secteur de la santé au cœur d'une évolution technologique majeure. Face à des usagers habitués à l'instantanéité, les méthodes traditionnelles de gestion médicale révèlent aujourd'hui leurs limites structurelles. La saturation des secrétariats, la multiplication des erreurs de saisie et le manque de flexibilité horaire pénalisent les patients tout en alourdissant la charge des praticiens. Dans ce contexte, la digitalisation des parcours de soins s'impose comme une nécessité impérative pour optimiser l'efficience opérationnelle du corps médical.
+
+C'est dans cette optique de modernisation que s'inscrit le présent projet, dont l'objectif est la conception et le développement de \textbf{Prescripto}. Conçue comme une solution web \textit{fullstack} de dernière génération, cette plateforme ambitionne de concilier les attentes d'immédiateté des patients et les impératifs de rigueur des professionnels de la santé. Privilégiant l'expérience utilisateur et la simplicité d'utilisation sans compromettre la sécurité des données, l'application s'appuie techniquement sur les standards éprouvés de Java Entreprise pour garantir la modularité, la scalabilité et la maintenabilité de cet écosystème critique.
+
+Pour rendre compte de la démarche d'ingénierie adoptée, de l'idéation jusqu'au déploiement, ce rapport est structuré en quatre chapitres majeurs~:
+
+\begin{enumerate}[leftmargin=2cm]
+  \item \textbf{Chapitre I~: Contexte général du projet}~---~présentation du cahier des charges, de la problématique, de l'étude de l'existant et de l'analyse des besoins.
+  \item \textbf{Chapitre II~: Étude préalable}~---~étude du marché, choix de la méthode managériale Scrum, planning prévisionnel et estimation budgétaire.
+  \item \textbf{Chapitre III~: Modélisation}~---~conception UML (diagrammes de cas d'utilisation, de séquence, de classes) et schéma de la base de données.
+  \item \textbf{Chapitre IV~: Réalisation}~---~architecture technique, outils, frameworks et présentation des interfaces réalisées.
+\end{enumerate}
+
+% ══════════════════════════════════════════════════════════════
+%   CHAPITRE I : CONTEXTE GÉNÉRAL DU PROJET
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section{Chapitre I : Contexte général du projet}
+\label{chap:contexte}
+
+\subsection*{Introduction}
+\phantomsection % <--- Ajouté ici pour créer l'ancre hypertexte unique
+\addcontentsline{toc}{subsection}{Introduction}
+
+Ce premier chapitre pose les fondations conceptuelles et méthodologiques de notre étude. Il s'ouvre sur la formalisation du cahier des charges qui encadre notre démarche d'ingénierie, puis dresse une analyse critique de l'existant à travers l'étude de la plateforme de référence \textit{Doctolib}. Enfin, il formalise l'ingénierie des exigences à travers une expression rigoureuse des besoins fonctionnels et non fonctionnels de notre solution dédiée à la gestion médicale.
+
+\subsection{Cahier des charges}
+
+\subsubsection{Contexte du projet}
+
+Le déploiement des technologies numériques dans le secteur médical est devenu un levier incontournable pour améliorer l'accès aux soins et optimiser l'organisation des structures de santé. C'est dans cette dynamique, et dans le cadre du module de développement \textbf{JEE (Java Entreprise Edition)} au sein de l'\textbf{IGA (Institut Supérieur du Génie Appliqué)}, que s'inscrit le présent projet. 
+
+L'objectif principal est de simuler un environnement de production réel afin de concevoir et déployer une application web \textit{fullstack} baptisée \textbf{Prescripto}. Cette plateforme vise à dématérialiser les processus de prise de rendez-vous et à fournir aux professionnels de santé un outil moderne, agile et centralisé pour piloter leur activité quotidienne.
+
+\subsubsection{Problématique}
+
+Les systèmes traditionnels de gestion des consultations médicales souffrent de plusieurs inefficients : engorgement des lignes téléphoniques, rigidité des horaires d'ouverture des secrétariats et opacité des disponibilités en temps réel pour les patients. Ces contraintes pénalisent le parcours de soins et alourdissent la charge administrative des praticiens. 
+
+Dès lors, la problématique centrale de notre projet se formule ainsi :
+\begin{notebox}
+\textbf{Question centrale :} Comment concevoir et déployer une architecture logicielle robuste et centralisée, capable de synchroniser instantanément les disponibilités médicales et de simplifier le parcours de réservation pour le patient, tout en offrant au médecin un tableau de bord intuitif pour le suivi de ses consultations ?
+\end{notebox}
+
+\subsection{Étude de l'existant}
+
+\subsubsection{Présentation du site de référence}
+
+Afin de concevoir une solution pertinente et alignée sur les standards du marché, nous avons choisi comme système de référence la plateforme \textbf{Doctolib}. Fondée en 2013, elle s'est imposée comme le leader incontesté de la e-santé en Europe, offrant un benchmark idéal pour analyser la numérisation des parcours de soins.
+
+\subsubsection{Description de l'existant}
+
+L'écosystème \textit{Doctolib} repose sur un annuaire exhaustif de professionnels de santé, géolocalisé et interconnecté avec un module de prise de rendez-vous en ligne accessible 24h/24. Pour les praticiens, la plateforme propose un logiciel de gestion d'agenda hautement paramétrable, un outil de téléconsultation intégré ainsi qu'un système de gestion de la patientèle permettant de réduire le taux de rendez-vous non honorés grâce à des rappels automatiques.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{Doctolib.png}
+\caption{Interface d'accueil de la plateforme de référence Doctolib}
+\label{fig:doctolib}
+\end{figure}
+
+\subsubsection{Critique de l'existant}
+
+Malgré ses performances techniques et son hégémonie sur le marché, le modèle de \textit{Doctolib} présente certaines limites macro-économiques et opérationnelles pour une frange de professionnels :
+
+\begin{table}[H]
+\centering
+\caption{Analyse critique du système de référence Doctolib}
+\label{tab:critique_doctolib}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Critère} & \textbf{Constat / Limite identifiée} \\
+\hline
+Coût d'accès & Modèle d'abonnement mensuel onéreux, représentant une barrière financière pour les jeunes praticiens ou les petites structures indépendantes. \\
+\hline
+Complexité d'usage & Configuration dense et fonctionnalités parfois superflues pour des besoins locaux ou des cliniques de taille modeste. \\
+\hline
+Souveraineté des données & Centralisation massive des données de santé soulevant des interrogations récurrentes sur la dépendance vis-à-vis d'un acteur unique. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Solution proposée : Prescripto}
+
+Pour pallier ces barrières à l'entrée, nous proposons avec \textbf{Prescripto} une alternative logicielle plus légère, agile et rigoureusement centrée sur les fonctionnalités vitales d'un cabinet médical :
+\begin{itemize}
+  \item \textbf{Mise en relation directe :} Un parcours utilisateur épuré permettant au patient de trouver son praticien et de planifier sa consultation en quelques clics.
+  \item \textbf{Gestion dynamique des créneaux :} Un espace médecin fluide pour ouvrir, modifier ou annuler des plages horaires instantanément.
+  \item \textbf{Suivi financier intégré :} Un module de suivi simplifié des statuts de paiement (espèces ou carte bancaire) pour sécuriser et clarifier la comptabilité de la clinique.
+\end{itemize}
+
+\subsection{Analyse des besoins}
+
+\subsubsection{Besoins Fonctionnels}
+
+L'expression des besoins fonctionnels de la plateforme \textbf{Prescripto} s'articule autour de trois acteurs métiers principaux : Le \textbf{Patient}, le \textbf{Médecin} et l'\textbf{Administrateur}.
+
+\vspace{0.3cm}
+\textbf{1. Le Patient :}
+\begin{itemize}
+  \item S'authentifier de manière sécurisée sur la plateforme (\textit{Authentication}).
+  \item Effectuer une recherche de professionnels de santé par spécialité.
+  \item Sélectionner le créneau horaire de son choix pour son rendez-vous.
+  \item Gérer ses rendez-vous (\textit{appointments}), avec la possibilité de les annuler.
+  \item Choisir le mode de paiement lors de la réservation (\textit{Cash} ou \textit{Card}).
+  \item Mettre à jour et administrer son profil personnel (\textit{Update profile}).
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{2. Le Médecin :}
+\begin{itemize}
+  \item Se connecter de manière sécurisée à son espace dédié (\textit{Login}).
+  \item Gérer l'état des rendez-vous en confirmant ou en annulant les consultations.
+  \item Consulter un tableau de bord (\textit{Dashboard}) analytique de son activité.
+  \item Mettre à jour et administrer ses informations professionnelles et son profil (\textit{Update profile}).
+\end{itemize}
+
+\vspace{0.3cm}
+\textbf{3. L'Administrateur :}
+\begin{itemize}
+  \item Se connecter de manière sécurisée à son espace dédié (\textit{Login}).
+  \item Ajouter et inscrire de nouveaux médecins sur la plateforme.
+  \item Gérer la liste des médecins en activant ou en désactivant leurs comptes.
+  \item Consulter l'ensemble des rendez-vous du système avec le droit d'annuler une consultation.
+  \item Accéder au tableau de bord global (\textit{Dashboard}) pour superviser l'activité de l'application.
+\end{itemize}
+
+\subsubsection{Besoins non fonctionnels}
+
+Les besoins non fonctionnels définissent les exigences de qualité, de sécurité et de performance technologique nécessaires à la viabilité opérationnelle de \textbf{Prescripto}.
+
+\begin{table}[H]
+\centering
+\caption{Spécifications des exigences non fonctionnelles}
+\label{tab:besoins_non_fonc}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Critère} & \textbf{Exigence technique retenue} \\
+\hline
+\textbf{Performance} & Le temps de réponse du serveur pour le chargement des créneaux et la validation des requêtes doit être inférieur à $1$~seconde afin de garantir une expérience fluide. \\
+\hline
+\textbf{Sécurité} & L'accès aux ressources de l'API doit être sécurisé par une authentification par jeton (\textit{Token-based Authentication}). Le système doit assurer une isolation stricte des données personnelles des patients (RGPD). \\
+\hline
+\textbf{Ergonomie} & L'interface utilisateur doit être entièrement \textit{responsive} pour s'adapter aux smartphones, tablettes et ordinateurs. L'intégration esthétique est réalisée via le framework utilitaire \textbf{TailwindCSS}. \\
+\hline
+\textbf{Maintenabilité} & Le code source doit respecter une architecture découplée (Backend API REST / Frontend indépendant) afin de faciliter l'évolution future du produit. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsection*{Conclusion}
+\addcontentsline{toc}{subsection}{Conclusion}
+
+Ce premier chapitre a permis de délimiter avec précision le cadre de notre projet \textbf{Prescripto}. À travers la confrontation des limites du leader \textit{Doctolib} et l'expression rigoureuse des besoins de nos acteurs, nous avons validé la pertinence fonctionnelle de notre solution de e-santé. Fort de ces spécifications, le chapitre suivant sera dédié à l'\textbf{Étude préalable}, centrée sur l'analyse du marché, l'organisation de la méthode agile \textit{Scrum} et la planification temporelle de nos sprints de développement.
+
+
+% ══════════════════════════════════════════════════════════════
+%   CHAPITRE II : ÉTUDE PRÉALABLE
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section{Chapitre II : Étude préalable}
+\label{chap:etude_prealable}
+
+\subsection*{Introduction}
+\phantomsection % <--- Empêche le conflit d'ancre pour hyperref
+\addcontentsline{toc}{subsection}{Introduction}
+
+Avant d'entamer les phases de modélisation et de développement, toute démarche d'ingénierie logicielle rigoureuse impose une étude préalable approfondie. Ce chapitre présente l'analyse du marché des solutions de e-santé existantes afin de positionner stratégiquement notre application, remet en contexte nos choix de réalisation sur mesure, décrit en détail le cadre méthodologique Agile \textit{Scrum} adopté pour la gestion de l'équipe, et formalise notre planification temporelle ainsi que l'estimation budgétaire associée.
+
+\subsection{Étude du marché}
+
+\subsubsection{Solutions existantes}
+
+Le marché de la gestion médicale en ligne et de la prise de rendez-vous est hautement concurrentiel, structuré par des acteurs locaux et internationaux solidement implantés :
+
+\begin{itemize}
+  \item \textbf{Doctolib :} Leader européen incontesté, offrant un écosystème très riche (agenda, téléconsultation, dossier patient). Cependant, son coût d'accès élevé et sa complexité logicielle le rendent inadapté aux structures indépendantes ou de taille modeste.
+  \item \textbf{DabaDoc :} Pionnier et leader de la prise de rendez-vous médicaux en ligne au Maroc et en Afrique du Nord. Il offre une excellente visibilité locale mais repose sur un modèle d'abonnement standardisé, parfois rigide pour les flux de gestion internes spécifiques à certaines cliniques.
+  \item \textbf{Zocdoc :} Référence américaine majeure en matière de e-santé, centrée sur l'expérience utilisateur et l'intégration des systèmes d'assurance. Sa structure et son modèle économique sont toutefois fortement calqués sur le système de santé nord-américain.
+\end{itemize}
+
+\subsubsection{Analyse comparative}
+
+L'analyse de ces solutions met en évidence un besoin non couvert pour les structures médicales cherchant l'essentiel sans la complexité ni les coûts des infrastructures de paiement tierces :
+
+\begin{table}[H]
+\centering
+\caption{Positionnement de Prescripto face aux solutions du marché}
+\label{tab:comparatif_marche}
+\begin{tabularx}{\textwidth}{|X|c|c|c|c|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Critère de comparaison} & \textbf{Doctolib} & \textbf{DabaDoc} & \textbf{Zocdoc} & \textbf{Notre solution} \\
+\hline
+Prise de rendez-vous en ligne   
+  & {\color{green!60!black}\checkmark} 
+  & {\color{green!60!black}\checkmark} 
+  & {\color{green!60!black}\checkmark} 
+  & {\color{green!60!black}\checkmark} \\
+\hline
+Gestion d'agenda Médecin  
+  & {\color{green!60!black}\checkmark} 
+  & {\color{green!60!black}\checkmark} 
+  & {\color{green!60!black}\checkmark} 
+  & {\color{green!60!black}\checkmark} \\
+\hline
+Modèle financier allégé  
+  & {\color{red!70!black}$\times$} 
+  & {\color{red!70!black}$\times$} 
+  & {\color{red!70!black}$\times$} 
+  & {\color{green!60!black}\checkmark} \\
+\hline
+Approche \textit{Clinic-First} (Paiement)  
+  & {\color{red!70!black}$\times$} 
+  & {\color{red!70!black}$\times$} 
+  & {\color{red!70!black}$\times$} 
+  & {\color{green!60!black}\checkmark} \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Solution choisie}
+
+Au regard de cette analyse, nous optons pour un \textbf{développement sur mesure} d'une application web \textit{fullstack}. Plutôt que de dépendre d'une solution propriétaire rigide, cette approche nous offre une liberté totale dans la mise en œuvre de notre vision orientée vers la gestion locale simplifiée des cabinets et des cliniques.
+
+\subsubsection{Justification du choix}
+
+La philosophie \textbf{\textit{Clinic-First}} concernant la gestion des flux financiers constitue notre principal facteur de différenciation. Contrairement aux plateformes existantes qui imposent des passerelles de paiement en ligne complexes, lourdes à configurer et soumises à des commissions (Stripe, CMI, etc.), notre solution opte pour un \textbf{système de déclaration et de suivi directement à la clinique}. Le patient sélectionne son mode de paiement (\textit{Cash} ou \textit{Card}) lors de sa réservation, et la validation s'effectue au comptoir de l'établissement, offrant une alternative fluide, transparente et sans surcoût infrastructurel pour les petites structures.
+
+Le choix du sur-mesure s'appuie également sur :
+\begin{enumerate}
+  \item \textbf{Flexibilité ergonomique :} Conception d'interfaces épurées via TailwindCSS, évitant la surcharge fonctionnelle de Doctolib.
+  \item \textbf{Maîtrise technologique :} Alignement parfait avec les standards JEE (Servlets, JDBC) et React étudiés lors de notre cursus.
+  \item \textbf{Valeur académique :} Opportunité concrète de mettre en œuvre un écosystème d'ingénierie complet, du backend au frontend démaquetté.
+\end{enumerate}
+
+\subsection{Méthode managériale}
+
+\subsubsection{Définition de la méthode}
+
+Pour piloter la réalisation de \textbf{Prescripto}, nous avons adopté la méthode agile \textbf{Scrum}. Il s'agit d'un cadre de travail (\textit{Framework}) itératif et incrémental conçu pour fractionner le projet en cycles de développement courts et dynamiques appelés \textbf{Sprints}. Cette approche garantit la livraison régulière de modules fonctionnels testés et adaptables.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{Scrum.jpg}
+\caption{Schéma du processus Scrum}
+\label{fig:processus_scrum}
+\end{figure}
+
+\subsubsection{Pourquoi Scrum ?}
+
+L'introduction de Scrum au sein de notre équipe répond à deux impératifs majeurs :
+\begin{itemize}
+  \item \textbf{Collaboration intra-équipe :} Structurer efficacement le travail collaboratif entre les trois ingénieurs de l'équipe (\textbf{Aya}, \textbf{Doha} et \textbf{Chadi}) en répartissant clairement les tâches frontend et backend.
+  \item \textbf{Réactivité managériale :} Assurer une boucle de rétroaction courte afin d'intégrer rapidement les retours et validations de notre encadrante pédagogique, \textbf{Pr. ZAOUI Chaymae}, à la fin de chaque itération.
+\end{itemize}
+
+\subsubsection{Les acteurs dans une équipe Scrum}
+
+L'organisation des rôles Scrum au sein de notre équipe est définie de la manière suivante :
+
+\begin{table}[H]
+\centering
+\caption{Attribution des rôles Scrum}
+\label{tab:roles_scrum}
+\begin{tabularx}{\textwidth}{|l|X|X|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Rôle Scrum} & \textbf{Acteur désigné} & \textbf{Responsabilités clés} \\
+\hline
+\textbf{Product Owner} & Aya Ahdi & Spécification des exigences métiers, vision du produit Prescripto, priorisation du \textit{Backlog} et validation finale des fonctionnalités de l'application. \\
+\hline
+\textbf{Scrum Master} & Doha Bouhali & Facilitatrice de l'équipe, garante du respect du cadre Scrum, organisation des rituels (Sprints, Daily Stand-up) et levée des obstacles techniques ou organisationnels. \\
+\hline
+\textbf{Équipe de Dev} & Chadi Hamraoui \newline Doha Bouhali \newline Aya Ahdi & Modélisation du système (UML), implémentation de la logique backend JEE (Servlets/DAO), intégration de l'interface frontend React et phases de tests. \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Séquencement des Sprints}
+
+Le cycle Scrum s'articule autour d'une planification modulaire où chaque phase métier est conçue comme un incrément testable. Les efforts de développement ont été répartis sur 6 Sprints distincts :
+\begin{itemize}
+  \item \textbf{Sprint 1~:} Analyse et planification (cahier des charges, étude de l'existant, définition des besoins).
+  \item \textbf{Sprint 2~:} Modélisation et conception (diagrammes UML, schéma BDD).
+  \item \textbf{Sprint 3~:} Mise en place de l'environnement (configuration JEE, React, MySQL).
+  \item \textbf{Sprint 4~:} Développement backend (API REST, authentification, gestion des rendez-vous).
+  \item \textbf{Sprint 5~:} Développement frontend (interfaces, Context React, Axios, recommandations).
+  \item \textbf{Sprint 6~:} Tests, validation et préparation de la soutenance.
+\end{itemize}
+
+\subsubsection{L'outil de gestion de projet JIRA}
+
+L'outil de gestion agile \textbf{JIRA} a été déployé pour piloter l'avancement global de l'application. Il permet de centraliser le \textit{Product Backlog}, de suivre en temps réel la vélocité de l'équipe à travers un tableau Kanban virtuel et d'isoler les dépendances techniques. Ces différentes phases ont été structurées sous forme d'Épics afin de générer un diagramme de Gantt clair pour l'équipe et le corps professoral.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{jira.png}
+\caption{Tableau de chronologie et suivi des Sprints sur JIRA}
+\label{fig:jira_gantt}
+\end{figure}
+
+\subsection{Le planning prévisionnel}
+
+\subsubsection{Visualisation de la planification}
+
+Afin de garantir le respect de nos échéances académiques, l'effort global estimé pour la réalisation complète de la plateforme \textbf{Prescripto} est de \textbf{260 heures}, réparties de la manière suivante :
+
+\begin{table}[H]
+\centering
+\caption{Planning prévisionnel et répartition de la charge de travail}
+\label{tab:planning_prev}
+\begin{tabularx}{\textwidth}{|l|c|X|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Phase du projet} & \textbf{Durée (Heures)} & \textbf{Tâches principales associées} \\
+\hline
+\textbf{Analyse \& Recherche} & $30$~h & Étude approfondie du marché, élaboration du cahier des charges et expression des exigences. \\
+\hline
+\textbf{Conception UML} & $40$~h & Conception des diagrammes de cas d'utilisation, de séquence et de classes ; modélisation du schéma relationnel. \\
+\hline
+\textbf{Développement Backend} & $90$~h & Implémentation de l'architecture JEE, écriture des Servlets, conception de la couche DAO et interfaçage JDBC. \\
+\hline
+\textbf{Développement Frontend} & $70$~h & Création des composants React sous TailwindCSS, gestion de l'état global via l'API \textit{Context}. \\
+\hline
+\textbf{Tests \& Intégration} & $30$~h & Phases de \textit{debugging}, tests unitaires, validation des flux de bout en bout et ajustements UX. \\
+\hline
+\rowcolor{igablue!10}
+\textbf{Total Global} & \textbf{260~h} & \textbf{Livrable final de la plateforme Prescripto} \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Suivi et ajustements du planning}
+
+Le suivi régulier de la planification s'effectue lors des réunions de clôture de Sprint. L'utilisation du tableau de bord JIRA permet de réajuster l'effort si un goulot d'étranglement est détecté, notamment lors de l'interfaçage entre les Servlets JEE et les appels \textit{Axios} du frontend React.
+
+\subsection{Estimation budgétaire}
+
+\subsubsection{Méthodologie de calcul}
+
+Afin d'assurer la transparence de notre démarche financière, l'estimation budgétaire a été calculée en appliquant la méthode des coûts directs basés sur l'effort de développement. La charge globale de travail a été évaluée à un total de $260$~heures. 
+
+Sur la base d'un rythme de travail de $8$~heures par jour, ce volume horaire équivaut à un nombre total de jours-hommes brut défini par :
+$$ \text{Nombre de jours-hommes} = \frac{260\text{ h}}{8\text{ h/jour}} = 32,5\text{ jours-hommes} $$
+
+Le coût financier d'une phase de développement est ainsi modélisé par la formule suivante :
+$$ \text{Coût de la phase} = \text{Charge de travail (en jours-hommes)} \times \text{TJM} $$
+
+Où le TJM (Tarif Journalier Moyen) appliqué correspond à la grille tarifaire d'un profil ingénieur concepteur-développeur junior sur le marché de l'emploi marocain, oscillant entre $300$~MAD (borne basse) et $600$~MAD (borne haute) par jour.
+
+\subsubsection{Répartition par phase}
+
+\begin{table}[H]
+\centering
+\caption{Estimation budgétaire par phase de réalisation}
+\label{tab:budget_phases}
+\begin{tabularx}{\textwidth}{|X|l|l|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Phase} & \textbf{Durée estimée} & \textbf{Coût estimé (MAD)} \\
+\hline
+Cahier des charges & 1 semaine & 3 000 -- 5 000 \\
+\hline
+Modélisation et Conception UI/UX & 3 semaines & 4 000 -- 7 000 \\
+\hline
+Développement Backend & 1 mois & 15 000 -- 25 000 \\
+\hline
+Développement Frontend & 1 mois & 8 000 -- 12 000 \\
+\hline
+Gestion du paiement Clinic-First & 3 semaines & 7 000 -- 12 000 \\
+\hline
+Gestion des rôles et sécurité & 1 semaine & 3 000 -- 5 000 \\
+\hline
+Tests et validation & 1,5 semaines & 4 000 -- 7 000 \\
+\hline
+Déploiement \& Maintenance & 2 semaines & 5 000 -- 8 000 \\
+\hline
+\rowcolor{igablue!10}
+\textbf{Total estimé} & Env. 11 semaines & \textbf{49 000 -- 81 000 MAD} \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Conditions de l'estimation}
+
+Cette estimation est établie sur la base de tarifs journaliers de développeurs juniors marocains, en incluant les coûts d'infrastructure (hébergement, outils). Les technologies utilisées étant majoritairement open-source, les coûts liés aux licences logicielles sont nuls.
+
+\subsection*{Conclusion}
+\addcontentsline{toc}{subsection}{Conclusion}
+
+Ce deuxième chapitre a consolidé les bases organisationnelles et stratégiques de notre projet : analyse du marché, choix d'un développement sur mesure, adoption de Scrum comme méthode agile, et planification détaillée sur JIRA. Le chapitre suivant entre dans le cœur de la démarche de conception technique avec la présentation des diagrammes UML et la modélisation de notre base de données.
+
+% ══════════════════════════════════════════════════════════════
+%   CHAPITRE III : MODÉLISATION
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section{Chapitre III : Modélisation}
+\label{chap:modelisation}
+
+\subsection*{Introduction}
+\phantomsection % <--- Crée l'ancre indispensable pour hyperref
+\addcontentsline{toc}{subsection}{Introduction}
+
+La phase de modélisation est essentielle dans tout projet logiciel~: elle traduit les besoins en une architecture formelle et visuelle que l'équipe de développement peut implémenter. Ce chapitre présente les diagrammes UML produits (cas d'utilisation, séquence, classes) permettant de structurer l'application médicale \textbf{Prescripto}, ainsi que l'organisation relationnelle de sa base de données.
+
+\subsection{Méthodologie de conception}
+
+\subsubsection{Choix du langage UML}
+
+Nous avons retenu le langage de modélisation \textbf{UML (Unified Modeling Language)} pour sa richesse expressive et sa standardisation incontestée dans le secteur du génie logiciel. En tant que standard de l'industrie pour la modélisation objet, UML nous permet de représenter de manière rigoureuse les aspects statiques et dynamiques du système, garantissant une communication claire au sein de l'équipe de développement.
+
+\subsubsection{Les acteurs du système}
+
+Le système de la plateforme \textbf{Prescripto} implique trois catégories d'acteurs principaux~:
+
+\begin{itemize}
+  \item \textbf{Patient (CLIENT)}~: utilisateur qui accède à la plateforme pour rechercher un professionnel de santé, consulter les disponibilités en temps réel, effectuer une réservation et déclarer son mode de paiement au comptoir.
+  \item \textbf{Médecin (DOCTOR)}~: professionnel de santé qui gère son profil, configure ses créneaux horaires, valide, complète ou annule les rendez-vous, et accède au suivi de ses statistiques d'activité.
+  \item \textbf{Administrateur (ADMIN)}~: responsable de la gouvernance globale de l'application~; il valide l'inscription des nouveaux praticiens, gère la sécurité des comptes et supervise le bon fonctionnement du système.
+\end{itemize}
+
+\subsection{Les diagrammes de cas d'utilisation}
+
+Le diagramme de cas d'utilisation global de notre système identifie les fonctionnalités associées à chaque acteur, mettant en évidence les interactions métiers fondamentales au sein de \textbf{Prescripto}.
+
+Les cas d'utilisation principaux sont répartis ainsi~:
+
+\begin{table}[H]
+\centering
+\caption{Matrice des cas d'utilisation par acteur métier}
+\label{tab:matrice_uc}
+\begin{tabularx}{\textwidth}{|l|X|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Acteur} & \textbf{Cas d'utilisation associés (Fonctionnalités)} \\
+\hline
+\textbf{1. Le Patient} & 
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[leftmargin=0.4cm,nosep,after=\vspace{\baselineskip}]
+  \item S'authentifier de manière sécurisée sur la plateforme (\textit{Authentication}).
+  \item Effectuer une recherche de professionnels de santé par spécialité.
+  \item Sélectionner le créneau horaire de son choix pour son rendez-vous.
+  \item Gérer ses rendez-vous (\textit{appointments}), avec la possibilité de les annuler.
+  \item Choisir le mode de paiement lors de la réservation (\textit{Cash} ou \textit{Card}).
+  \item Mettre à jour et administrer son profil personnel (\textit{Update profile}).
+\end{itemize}
+\end{minipage} \\
+\hline
+\textbf{2. Le Médecin} & 
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[leftmargin=0.4cm,nosep,after=\vspace{\baselineskip}]
+  \item Se connecter de manière sécurisée à son espace dédié (\textit{Login}).
+  \item Gérer l'état des rendez-vous en confirmant ou en annulant les consultations.
+  \item Consulter un tableau de bord (\textit{Dashboard}) analytique de son activité.
+  \item Mettre à jour et administrer ses informations professionnelles et son profil (\textit{Update profile}).
+\end{itemize}
+\end{minipage} \\
+\hline
+\textbf{3. L'Administrateur} & 
+\begin{minipage}[t]{\linewidth}
+\begin{itemize}[leftmargin=0.4cm,nosep,after=\vspace{\baselineskip}]
+  \item Se connecter de manière sécurisée à son espace dédié (\textit{Login}).
+  \item Ajouter et inscrire de nouveaux médecins sur la plateforme.
+  \item Gérer la liste des médecins en activant ou en désactivant leurs comptes.
+  \item Consulter l'ensemble des rendez-vous du système avec le droit d'annuler une consultation.
+  \item Accéder au tableau de bord global (\textit{Dashboard}) pour superviser l'activité de l'application.
+\end{itemize}
+\end{minipage} \\
+\hline
+\end{tabularx}
+\end{table}
+
+
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{CasDutilisation.png}
+\caption{Diagramme de cas d'utilisation global du système}
+\label{fig:cas_d'utilisation}
+\end{figure}
+
+
+\subsection{Les diagrammes de séquence}
+
+Les diagrammes de séquence permettent de modéliser l'aspect dynamique de notre système en décrivant l'ordre chronologique des interactions entre les différents acteurs et les composants internes de l'application à travers ses différentes couches.
+
+\subsubsection{Authentification des utilisateurs (Patient, Médecin et Administrateur)}
+
+Ce premier diagramme de séquence décrit la cinématique de gestion des comptes et de contrôle d'accès. Il met en évidence le traitement des requêtes HTTP entre notre frontend \textit{ReactJS}, le contrôleur backend \textit{AuthServlet} (JEE) et la couche de persistance interfacée avec la base de données \textit{MySQL}.
+
+\begin{itemize}
+    \item \textbf{Flux d'Inscription (Register Patient) :} Le patient soumet ses informations. Le système vérifie l'unicité de l'email. Si l'adresse est disponible, le mot de passe est haché via \textit{BCrypt} avant l'insertion en base de données (\texttt{HTTP 201 Created}). Dans le cas contraire, une exception est levée (\texttt{HTTP 400 Bad Request}).
+    \item \textbf{Flux de Connexion (Login Global) :} Qu'il s'agisse d'un Patient, d'un Médecin ou d'un Administrateur, la saisie des identifiants déclenche une vérification des correspondances de hachage. En cas de succès, un jeton de session sécurisé \textbf{JWT (JSON Web Token)} est généré par le serveur et stocké dans le \textit{localStorage} du client pour maintenir la session (\texttt{HTTP 200 OK}). Une erreur d'identifiants retourne un code \texttt{HTTP 401 Unauthorized}.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{RegisterLogin.png}
+\caption{Diagramme de séquence — Processus d'inscription et de connexion}
+\label{fig:seq_auth}
+\end{figure}
+
+\subsubsection{Flux de réservation d'une consultation par le Patient}
+
+Ce diagramme modélise l'interaction temporelle lors d'une prise de rendez-vous en ligne. Le processus traverse l'ensemble des couches de notre architecture technique (\textit{MVC}), depuis l'interface utilisateur épurée jusqu'à la persistance des données.
+
+Le \textbf{Patient} sélectionne une spécialité, choisit un médecin puis valide un créneau horaire disponible. L'interface frontend \textbf{ReactJS} transmet une requête d'insertion (contenant le choix du mode de paiement \textit{Cash} ou \textit{Card}) sous format JSON à la \textbf{Servlet} JEE correspondante. Celle-ci traite la logique métier et invoque la couche \textbf{DAO}, qui exécute l'interfaçage \textbf{JDBC} pour enregistrer le rendez-vous dans la base de données \textbf{MySQL}. Un message de confirmation est ensuite retourné en cascade jusqu'à l'écran du client.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.90\textwidth]{RDV.png}
+\caption{Diagramme de séquence — Flux de réservation d'un rendez-vous}
+\label{fig:seq_reservation}
+\end{figure}
+
+\subsubsection{Gestion des rendez-vous par le Médecin}
+
+Une fois le rendez-vous initié par le patient, le praticien dispose d'un contrôle total sur son planning depuis son tableau de bord (\textit{Dashboard}). Ce diagramme détaille le mécanisme de mise à jour des statuts des consultations.
+
+Le \textbf{Médecin}, authentifié sur son espace, accède à la liste de ses consultations en attente. Lorsqu'il décide de \textbf{confirmer} ou d'\textbf{annuler} un rendez-vous, le composant React envoie une requête HTTP (méthode \texttt{PUT} ou \texttt{POST}) contenant l'identifiant de la consultation. Le contrôleur JEE intercepte la demande, modifie l'état de la ligne correspondante en base de données via le module de persistance, puis renvoie le statut mis à jour pour rafraîchir dynamiquement l'affichage du tableau de bord.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.90\textwidth]{StatusRDVDoctor.png}
+\caption{Diagramme de séquence — Gestion des consultations par le Médecin}
+\label{fig:seq_gestion_medecin}
+\end{figure}
+
+\subsection{Le diagramme de classes}
+
+Le diagramme de classes structure de manière statique le modèle de données objet de notre application web. Il définit les attributs et les associations entre les entités clés~:
+
+\begin{itemize}
+  \item \textbf{User}~: entité de base gérant l'authentification et les informations communes (\texttt{id}, \texttt{nom}, \texttt{prenom}, \texttt{email}, \texttt{motDePasse}, \texttt{role}).
+  \item \textbf{Doctor}~: extension ou entité liée au profil médical, spécifiant les caractéristiques du praticien (\texttt{idDoctor}, \texttt{specialite}, \texttt{ville}, \texttt{adresseCabinet}, \texttt{tarifConsultation}).
+  \item \textbf{Appointment}~: entité pivot représentant la réservation, matérialisant l'approche \textit{Clinic-First} (\texttt{idAppointment}, \texttt{dateHeure}, \texttt{statut}, \texttt{modePaiementDeclare}, \texttt{idPatient}, \texttt{idDoctor}).
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{Class.png}
+\caption{Interface d'administration « All Appointments » permettant le suivi et la modération des états de rendez-vous}
+\label{fig:diagramme_classe}
+\end{figure}
+
+\subsection{Schéma et Implémentation de la Base de Données}
+\label{subsec:schema_bdd}
+
+La base de données relationnelle est implémentée sous le système de gestion de base de données \textbf{MySQL}, administré via l'interface \textbf{phpMyAdmin}. Ce schéma physique traduit concrètement le diagramme de classes en un ensemble de tables interconnectées, structurées pour optimiser les requêtes de prise de rendez-vous et garantir l'intégrité des informations.
+
+\subsubsection{Description des Tables Principales}
+Le cœur du système assure la cohérence des données à travers l'organisation rigoureuse de plusieurs tables clés issues de nos classes d'entités~:
+\begin{itemize}
+  \item \textbf{Table \texttt{utilisateurs} (ou \texttt{patients})}~: Centralise les données d'identification et les informations personnelles communes (ID, nom, prénom, email, mot de passe haché et rôle).
+  \item \textbf{Table \texttt{medecins}}~: Stocke les caractéristiques spécifiques des praticiens (ID, spécialité, ville, adresse, tarifs) et maintient une liaison avec la table des utilisateurs pour la gestion des comptes.
+  \item \textbf{Table \texttt{rendez\_vous}}~: Table pivot qui matérialise l'association entre un patient et un médecin à une date donnée. Elle enregistre également le statut de la consultation et le mode de paiement déclaré selon la logique \textit{Clinic-First}.
+\end{itemize}
+
+\subsubsection{Intégrité Référentielle et Contraintes}
+Afin d'éviter toute incohérence au sein du système, des contraintes d'intégrité référentielle strictes ont été configurées via l'utilisation de clés primaires et de clés étrangères (\textit{Foreign Keys}). Ces relations inter-tables intègrent des règles de mise à jour et de suppression adaptées (telles que \texttt{ON DELETE CASCADE} ou \texttt{ON DELETE RESTRICT}) afin de sécuriser les cycles de vie des rendez-vous par rapport aux utilisateurs.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{DataBase.png}
+\caption{Interface d'accueil de la plateforme de référence Doctolib}
+\end{figure}
+
+\subsection*{Conclusion}
+\addcontentsline{toc}{subsection}{Conclusion}
+
+La phase de modélisation a permis de formaliser l'ensemble des fonctionnalités du système à travers des diagrammes UML rigoureux, mettant en évidence les flux spécifiques à l'approche \textit{Clinic-First}. Le diagramme de classes et le schéma relationnel de la base de données constituent le référentiel de données sur lequel s'appuie l'implémentation de nos Servlets JEE et de notre interface React. Le chapitre suivant présente la réalisation concrète et l'implémentation logicielle de l'application.
+
+
+
+
+% ══════════════════════════════════════════════════════════════
+%   CHAPITRE IV : RÉALISATION
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section{Chapitre IV : Réalisation}
+\label{chap:realisation}
+
+\subsection*{Introduction}
+\phantomsection % <--- Crée l'ancre indispensable pour hyperref
+\addcontentsline{toc}{subsection}{Introduction}
+
+Ce dernier chapitre présente la mise en œuvre technique de la plateforme \textbf{Prescripto}. Après une description synthétique de l'architecture logicielle et de l'environnement de développement, nous exposons les principales interfaces de l'application à travers des captures d'écran commentées illustrant les scénarios utilisateurs clés.
+
+\subsection{Étude technique : Architecture MVC}
+
+\subsubsection{Architecture technique}
+
+Pour garantir la modularité du système, la plateforme \textbf{Prescripto} repose sur une \textbf{architecture découplée trois tiers} implémentant le patron de conception \textbf{MVC} :
+\begin{itemize}
+  \item \textbf{Le Modèle}~: Gère la persistance des données. Il est composé d'objets Java simples (\textbf{POJO}) et de classes d'accès aux données (\textbf{DAO}) exploitant l'API \textbf{JDBC} pour interagir avec la base de données \textbf{MySQL}.
+  \item \textbf{La Vue}~: Développée en \textbf{React.js}, elle offre une interface utilisateur fluide et dynamique qui communique de manière asynchrone avec le backend via des requêtes HTTP (\textit{Axios}).
+  \item \textbf{Le Contrôleur}~: Orchestré par des \textbf{Servlets JEE}. Elles font office d'endpoints API pour intercepter les requêtes du frontend, exécuter la logique métier et solliciter la couche DAO.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{mvc.png}
+\caption{Architecture technique découplée de Prescripto}
+\label{fig:architecture_technique}
+\end{figure}
+
+\subsubsection{Outils et technologies}
+
+L'environnement de développement de l'application s'appuie sur les outils suivants :
+\begin{itemize}
+  \item \textbf{VS Code} : Éditeur principal pour l'intégration des composants de l'interface frontend en React.js.
+  \item \textbf{Eclipse IDE} : Environnement retenu pour le développement de la logique serveur et des Servlets JEE.
+  \item \textbf{MySQL Workbench} : Outil graphique utilisé pour concevoir et optimiser le schéma relationnel.
+  \item \textbf{Maven} : Gestionnaire de dépendances employé pour automatiser la compilation et le déploiement du projet backend.
+\end{itemize}
+
+\begin{table}[H]
+\centering
+\caption{Matrice technique des composants de la stack}
+\begin{tabularx}{\textwidth}{|l|X|X|X|}
+\hline
+\rowcolor{igablue!15}
+\textbf{Composant} & \textbf{Rôle dans l'architecture} & \textbf{Technologie} & \textbf{Avantage Principal} \\
+\hline
+\textbf{Vue} & Interface utilisateur dynamique & React.js + TailwindCSS & Rendu rapide et composants réutilisables \\
+\hline
+\textbf{Contrôleur} & Logique métier et Endpoints API & Servlets JEE & Traitement natif, robuste et léger \\
+\hline
+\textbf{Modèle} & Accès aux données et Persistance & POJO, DAO et JDBC & Contrôle total sur les requêtes SQL \\
+\hline
+\textbf{Stockage} & Base de données relationnelle & MySQL & Transactions fiables et intégrité des données \\
+\hline
+\end{tabularx}
+\end{table}
+
+\subsubsection{Description technique des choix technologiques}
+
+Voici une analyse synthétique de la pertinence de notre stack technique :
+\begin{itemize}
+    \item \textbf{React.js \& TailwindCSS :} React utilise un \textit{Virtual DOM} qui optimise les mises à jour graphiques sans rechargement de page, garantissant un parcours patient fluide. TailwindCSS permet une intégration \textit{responsive} rapide directement dans le code JSX, assurant la légèreté du design.
+    \item \textbf{Servlets JEE :} Elles agissent comme points d'accès API légers et performants pour réceptionner les requêtes HTTP JSON du client, valider les jetons de session \textbf{JWT} et structurer les réponses serveur.
+    \item \textbf{POJO, DAO et JDBC :} L'utilisation conjointe de ces concepts sépare la logique métier de la persistance. L'implémentation de requêtes préparées (\texttt{PreparedStatement}) sécurise l'application contre les injections SQL.
+    \item \textbf{MySQL :} Ce SGBDR garantit la conformité aux propriétés \textbf{ACID}, un prérequis indispensable pour sécuriser les transactions de l'application et interdire la réservation simultanée d'un même créneau par deux patients.
+\end{itemize}
+
+
+
+\subsection{Interfaces \& Scénarios d’utilisation}
+\label{subsec:interfaces_scenarios}
+
+Cette section détaille les principales interfaces réalisées pour l’application \textbf{Prescripto}, présentées selon le parcours utilisateur et les fonctionnalités métiers majeures.
+
+\subsubsection{Scénario d'Inscription du Patient (Register)}
+Le parcours de l'utilisateur débute par la création d'un compte sur la plateforme. L'interface d'inscription, épurée et sécurisée, invite le patient à renseigner son nom complet, son adresse e-mail ainsi qu'un mot de passe robuste. Les données saisies sont ensuite transmises et contrôlées côté serveur avant d'être persistées en base de données pour officialiser l'accès au service.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{Register.png}
+\caption{Interface de création de compte (Register) du patient}
+\label{fig:register_patient}
+\end{figure}
+
+\subsubsection{Scénario d'Authentification (Login)}
+Une fois le compte créé, le patient est redirigé vers l'interface de connexion. Il y saisit ses identifiants (e-mail et mot de passe) afin d'ouvrir une session sécurisée. Cette étape est indispensable pour lier de manière intègre chaque future prise de rendez-vous à son profil médical personnel.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{Connexion.png}
+\caption{ Interface de connexion de l’application Prescripto}
+\label{fig:login_patient}
+\end{figure}
+
+\subsubsection{Page d'Accueil et Confirmation d'Authentification (Home)}
+Dès que l'authentification est validée par le serveur, le patient est redirigé vers la page d'accueil de la plateforme Prescripto. Cette interface centrale présente un message de bienvenue dynamique (« \textit{Book Appointment With Trusted Doctors} ») et propose des accès rapides aux spécialités médicales. 
+
+Comme l'illustre la figure ci-dessous, le système confirme visuellement le succès des opérations à l'utilisateur via l'affichage de notifications contextuelles de type Toast en haut à droite de l'écran, indiquant « \textit{Registration successful} » et « \textit{Logged in successfully!} ».
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{Acceuil.png}
+\caption{Page d'accueil de Prescripto et notifications de succès d'authentification}
+\label{fig:home_page}
+\end{figure}
+
+\subsubsection{Scénario de Recherche de praticiens et Sélection par Spécialité}
+Cette interface offre au patient une expérience de recherche intuitive et segmentée en deux blocs fonctionnels majeurs~:
+\begin{itemize}
+  \item \textbf{Filtrage par Spécialité (\textit{Find by Speciality})}~: L'utilisateur peut cliquer directement sur des icônes représentatives (General physician, Gynecologist, Dermatologist, Pediatricians, etc.) pour filtrer instantanément les praticiens selon la discipline médicale ciblée.
+  \item \textbf{Sélection des Médecins Vedettes (\textit{Top Doctors to Book})}~: En dessous des filtres, la plateforme met en avant sous forme de cartes dynamiques les profils des professionnels les plus sollicités. Chaque carte affiche la photo du médecin, son nom, sa spécialité ainsi qu'un indicateur visuel vert «~\textit{Available}~» signalant sa disponibilité immédiate pour une prise de rendez-vous.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{SpecialiteTop.png}
+\caption{Interface de filtrage par spécialités et liste des meilleurs médecins}
+\label{fig:recherche_specialite}
+\end{figure}
+
+\subsubsection{Composants de Fin de Page : Bannière d'Engagement et Pied de Page (Footer)}
+Afin d'optimiser l'expérience utilisateur et de clore la page d'accueil de manière professionnelle, l'interface intègre deux éléments structurels majeurs~:
+\begin{itemize}
+  \item \textbf{Bannière promotionnelle d'engagement}~: Un bandeau visuel marquant («~\textit{Book Appointment With 100+ Trusted Doctors}~») incite le visiteur à passer à l'action. Un bouton dynamique «~\textit{Create account}~» y est directement intégré pour simplifier et accélérer le tunnel de conversion des nouveaux patients.
+  \item \textbf{Pied de page (Footer)}~: Divisé de façon rigoureuse en trois colonnes, il centralise les informations institutionnelles de la plateforme~:
+  \begin{itemize}
+    \item \textit{Section Logo \& Description}~: Rappelle l'identité visuelle de Prescripto accompagnée d'un texte de présentation.
+    \item \textit{Section Company}~: Regroupe les liens de navigation secondaires (Home, About Us, Contact Us, Privacy policy).
+    \item \textit{Section Get In Touch}~: Présente les coordonnées de contact officielles (téléphone et adresse e-mail du support).
+  \end{itemize}
+  Une ligne de mention de droits d'auteur (\textit{Copyright}) vient finaliser l'interface à l'extrémité inférieure de l'écran.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{BannerFooter.png}
+\caption{Interface de la bannière d'inscription et du pied de page (Footer) de Prescripto}
+\label{fig:banner_footer}
+\end{figure}
+
+\subsubsection{Scénario de Consultation Globale et Filtrage Avancé (All Doctors)}
+L'interface «~All Doctors~» centralise l'ensemble du corps médical inscrit sur la plateforme Prescripto et met à la disposition du patient un système de filtrage à double niveau pour faciliter sa recherche~:
+\begin{itemize}
+  \item \textbf{Menu Latéral des Spécialités}~: Situé à gauche de l'interface, un panneau vertical regroupe les différentes disciplines (General physician, Gynecologist, Dermatologist, Pediatricians, Neurologist, Gastroenterologist). Un clic sur l'une de ces catégories applique instantanément un filtre pour n'afficher que les spécialistes concernés.
+  \item \textbf{Grille Dynamique des Praticiens}~: Les résultats sont présentés sous forme d'une grille de cartes interactives. Chaque carte permet d'identifier rapidement le médecin grâce à sa photographie, son nom complet et sa spécialité principale.
+  \item \textbf{Gestion de l'État de Disponibilité}~: Un indicateur textuel précédé d'un badge coloré est intégré sur chaque profil. Il permet au patient de savoir en temps réel si le praticien est disponible («~\textit{Available}~» en vert) ou indisponible («~\textit{Not Available}~» en rouge) afin d'orienter efficacement sa prise de décision avant de cliquer sur le profil pour planifier un rendez-vous.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{Recherche.png}
+\caption{Interface de consultation générale « All Doctors » avec filtre latéral et indicateurs de disponibilité}
+\label{fig:all_doctors}
+\end{figure}
+
+\subsubsection{Scénario de Consultation des Détails Médecin et Sélection du Créneau}
+Lorsqu’un patient sélectionne un praticien, cette vue affiche son profil complet afin de valider et planifier la consultation. L’interface regroupe l’ensemble des informations professionnelles indispensables organisées en trois blocs fonctionnels~:
+\begin{itemize}
+  \item \textbf{Fiche Profil et Informations Praticien}~: Présente l'identité du médecin (ex. Dr. Emily Larson), son diplôme (MBBS), sa spécialité (Gynecologist) ainsi que ses années d'expérience. Une icône de certification bleue atteste de la validation de son profil. On y retrouve également une biographie détaillée («~\textit{About}~») et le montant des honoraires de consultation («~\textit{Appointment fee}~»).
+  \item \textbf{Sélection du Jour de Consultation (\textit{Booking slots})}~: Un carrousel horizontal interactif affiche les sept prochains jours de la semaine (abrégé et numéro du jour, ex. SAT 16, SUN 17, etc.). L'utilisateur sélectionne son jour d'un simple clic, le jour actif étant mis en valeur par un fond bleu.
+  \item \textbf{Sélection de l'Horaire et Réservation}~: En fonction du jour choisi, la liste des plages horaires disponibles s'affiche dynamiquement en dessous (créneaux de 30 minutes, ex. 10:00, 10:30, etc.). Une fois l'heure idéale sélectionnée, le patient clique sur le bouton «~\textit{Book An Appointment}~» pour initier le processus d'enregistrement du rendez-vous côté serveur.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{Detaille.png}
+\caption{Interface de consultation du profil médecin, choix de la date et de l'heure de consultation}
+\label{fig:details_medecin}
+\end{figure}
+
+\subsubsection{Scénario de Confirmation et de Gestion des Rendez-vous (My Appointments)}
+Dès que l'utilisateur clique sur le bouton «~\textit{Book An Appointment}~», le système traite la demande et redirige automatiquement le patient vers son espace personnel de suivi~:
+\begin{itemize}
+  \item \textbf{Notification de Confirmation Initiale}~: Une notification de type Toast apparaît en haut à droite de l'écran avec le message «~\textit{Appointment booked successfully!}~», confirmant la bonne exécution et l'enregistrement du rendez-vous côté serveur.
+  \item \textbf{Suivi et Structure du Rendez-vous}~: L'interface «~\textit{My appointments}~» liste de manière claire le rendez-vous créé. Elle récapitule la fiche du médecin (Dr. Emily Larson, Gynecologist), l'adresse du cabinet, ainsi que la date, l'heure validée et le mode de paiement actuel.
+  \item \textbf{Options de Gestion Métier Dynamiques (Paiement et Annulation)}~: À droite de la carte de consultation, des boutons d'action interactifs permettent au patient de piloter sa réservation conformément à la logique \textit{Clinic-First}~:
+  \begin{itemize}
+    \item \textit{Sélection du mode Card / Cash}~ : L'utilisateur peut cliquer sur «~\textit{Pay at Clinic (Card)}~» ou «~\textit{Pay at Clinic (Cash)}~». Un clic sur l'une de ces options déclenche une mise à jour immédiate de l'attribut en base de données. Le système affiche alors une notification de confirmation («~\textit{Payment method set to Card}~» ou «~\textit{Payment method set to Cash}~») et adapte dynamiquement l'interface en masquant l'option choisie pour refléter l'état actuel (voir Figure~\ref{fig:my_appointments_updated}).
+    \item \textit{Annulation du rendez-vous}~: Le bouton «~\textit{Cancel appointment}~» envoie une requête d'annulation côté serveur. Cette action libère instantanément le créneau pour les autres patients et génère une notification de confirmation visuelle attestant de la suppression ou du changement de statut de la consultation.
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{myAppoint.png}
+\caption{Interface « My Appointments » après mise à jour dynamique du mode de paiement sur Card}
+\label{fig:my_appointments_updated}
+\end{figure}
+\subsubsection{Interface Présentation de la Plateforme (About Us)}
+L'interface «~\textit{About Us}~» a pour objectif de renforcer la confiance des utilisateurs en présentant l'identité, la vision et les valeurs fondamentales de l'application Prescripto~:
+\begin{itemize}
+  \item \textbf{Section Identité et Mission}~: Flanquée d'une illustration représentative du corps médical, cette partie expose la raison d'être de la plateforme. Le texte met en avant la simplification de la gestion de la santé, la prise de rendez-vous intuitive et l'accompagnement personnalisé des patients.
+  \item \textbf{Vision Stratégique (\textit{Our Vision})}~: Elle explicite la volonté de créer une expérience de soin fluide et de jeter un pont numérique efficace entre les patients et les professionnels de la santé.
+  \item \textbf{Piliers de Différenciation (\textit{Why Choose Us})}~: En bas de page, une section structurée en trois blocs distincts détaille les arguments clés de l'application~:
+  \begin{itemize}
+    \item \textit{Efficiency}~: Optimisation de la planification des rendez-vous pour s'adapter aux rythmes de vie actifs.
+    \item \textit{Convenience}~: Accès simplifié à un réseau étendu de professionnels de santé de confiance à proximité.
+    \item \textit{Personalization}~: Recommandations et rappels sur mesure pour accompagner le suivi de santé quotidien.
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{About.png}
+\caption{Interface de présentation institutionnelle « About Us » et piliers de services}
+\label{fig:about_us}
+\end{figure}
+
+\subsubsection{Interface de Contact et Recrutement (Contact Us)}
+L'interface «~\textit{Contact Us}~» permet aux utilisateurs d'entrer en relation avec l'administration de la plateforme ou de postuler aux offres d'emploi proposées par la structure~:
+\begin{itemize}
+  \item \textbf{Section des Bureaux Officiels (\textit{Our Office})}~: Adossée à une illustration représentative d'un acte médical en clinique, cette partie fournit l'adresse physique complète du siège administratif («~\textit{54709 Willms Station, Suite 350, Washington, USA}~») ainsi que les lignes téléphoniques et l'adresse e-mail de support officiel (\texttt{info@prescripto.com}).
+  \item \textbf{Section Opportunités de Carrière (\textit{Careers at Prescripto})}~: Dans une optique d'extension de son réseau, la plateforme intègre un espace de recrutement invitant les professionnels à découvrir les équipes et les postes vacants. Un bouton interactif épuré «~\textit{Explore Jobs}~» permet d'accéder directement aux offres d'emploi actives.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{Contact.png}
+\caption{Interface de contact « Contact Us » et section carrières de Prescripto}
+\label{fig:contact_page}
+\end{figure}
+
+\subsubsection{Interface de Gestion du Profil et Menu Déroulant (My Profile)}
+Une fois authentifié, l'utilisateur a accès à son espace personnel de gestion de compte à travers une interface dédiée et un menu contextuel fluide~:
+\begin{itemize}
+  \item \textbf{Menu Déroulant de Navigation (\textit{Nav Dropdown Menu})}~: En survolant ou en cliquant sur l'avatar «~\textit{Profile}~» situé en haut à droite de la barre de navigation, un menu dynamique s'affiche. Il centralise trois redirections majeures pour l'utilisateur~:
+  \begin{itemize}
+    \item \textit{My Profile}~: Permet d'accéder à la vue de consultation et de modification des informations personnelles.
+    \item \textit{My Appointments}~: Redirige vers le tableau de suivi des réservations médicales.
+    \item \textit{Logout}~: Permet de détruire la session JEE active côté serveur et de déconnecter l'utilisateur de manière sécurisée.
+  \end{itemize}
+  \item \textbf{État Initial de l'Interface Profil}~: Lors de la première connexion suivant l'inscription, la fiche profil affiche uniquement les données obligatoires saisies lors de la création de compte (nom d'utilisateur, ex. «~\textit{Oussama}~», et adresse e-mail, ex. «~\textit{oussama@gmail.com}~»). Les autres blocs d'informations métiers («~\textit{Contact Information}~» et «~\textit{Basic Information}~») sont initialement vides.
+  \item \textbf{Mise à jour des Informations Patient}~: Pour compléter son dossier (Téléphone, Adresse, Genre, Date de naissance), le patient clique sur le bouton interactif «~\textit{Edit}~». Cette action bascule les champs en mode édition, permettant la saisie et la persistance des données via une Servlet dédiée pour mettre à jour la base de données MySQL.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{Profile.png}
+\caption{Interface de consultation du profil utilisateur initial et menu de navigation déroulant}
+\label{fig:user_profile}
+\end{figure}
+
+\subsubsection{Scénario de Modification du Profil et Notification de Succès (Edit Profile)}
+Pour maintenir ses informations médicales et administratives à jour, l'utilisateur peut modifier sa fiche personnelle de manière dynamique à tout moment~:
+\begin{itemize}
+  \item \textbf{Prise en compte du Mode Édition et Enregistrement}~: En cliquant sur le bouton «~\textit{Edit}~» (qui bascule en bouton de sauvegarde lors de la saisie), les champs du formulaire deviennent modifiables. L'utilisateur peut téléverser une photo de profil personnalisée pour remplacer l'avatar par défaut, compléter ou corriger son identité (ex. ajout d'un second prénom~: «~\textit{Oussama Andrew}~») et enrichir ses coordonnées.
+  \item \textbf{Données Persistées en Base de Données}~: Le formulaire prend en charge deux catégories d'informations métiers après validation~:
+  \begin{itemize}
+    \item \textit{Contact Information}~: Enregistrement du numéro de téléphone («~\textit{0601020304}~») et de l'adresse de résidence complète du patient.
+    \item \textit{Basic Information}~: Saisie de la date de naissance au format standardisé AAAA-MM-JJ («~\textit{2001-09-10}~»), calculant automatiquement ou mettant à jour l'âge correspondant de l'utilisateur («~\textit{25}~» ans).
+  \end{itemize}
+  \item \textbf{Notification de Validation Dynamique}~: Dès que les modifications sont soumises, les données sont envoyées à la Servlet JEE pour validation et persistance via la couche DAO dans la table MySQL. En réponse, l'interface React intercepte le succès et affiche un message Toast de type \textit{success} en haut à droite indiquant~: «~\textit{Profile updated successfully!}~» (voir Figure~\ref{fig:edit_profile_notification}).
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{EditProfil.png}
+\caption{Interface de profil utilisateur mis à jour avec toast de confirmation « Profile updated successfully! »}
+\label{fig:edit_profile_notification}
+\end{figure}
+
+\subsubsection{Interface d'Authentification du Personnel (Admin \& Doctor Login)}
+L'accès au panneau d'administration et de gestion globale de la plateforme (\textit{Prescripto Panel}) s'effectue via une interface d'authentification centralisée et dissociée de l'espace patient~:
+\begin{itemize}
+  \item \textbf{Structure de l'Interface de Connexion}~: Présentée sous la forme d'un formulaire épuré, elle invite l'utilisateur à renseigner ses identifiants professionnels (\textit{Email} et \textit{Password}). Un lien d'aiguillage dynamique situé au bas du bloc («~\textit{Doctor Login? Click here}~») permet de basculer instantanément la logique de vérification du serveur entre le rôle d'Administrateur et celui de Médecin.
+  \item \textbf{Règles d'Accès de l'Administrateur (\textit{Admin Login})}~: Les comptes administratifs disposent de privilèges élevés et ne peuvent pas être créés librement en ligne. L'administrateur utilise des identifiants sécurisés déjà configurés et injectés directement dans la base de données MySQL pour ouvrir sa session.
+  \item \textbf{Règles d'Accès du Corps Médical (\textit{Doctor Login})}~: Conformément aux exigences de sécurité et de certification de Prescripto, un professionnel de santé ne peut pas s'inscrire de lui-même sur ce panneau. Il est impératif que l'Administrateur ajoute préalablement le profil du médecin (nom, spécialité, diplômes, coordonnées) depuis son tableau de bord. Cette action génère les accès uniques qui permettront au docteur de s'authentifier par la suite pour piloter son flux de patients.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{LoginAdmin.png}
+\caption{Interface de connexion dédiée aux Administrateurs et aux Médecins (\textit{Prescripto Panel})}
+\label{fig:admin_doctor_login}
+\end{figure}
+
+\subsubsection{Interface du Tableau de Bord de l'Administrateur (Admin Dashboard)}
+Une fois authentifié sur le panneau d'administration, l'administrateur est dirigé vers une interface de pilotage centralisée lui offrant une visibilité complète sur l'activité de la plateforme Prescripto~:
+\begin{itemize}
+  \item \textbf{Menu de Navigation Latéral}~: Disposé sur la gauche, un panneau vertical permet de basculer rapidement entre les quatre grands modules d'administration~: le tableau de bord actif («~\textit{Dashboard}~»), le suivi global des rendez-vous («~\textit{Appointments}~»), le formulaire de création de profils médicaux («~\textit{Add Doctor}~») et l'annuaire complet du corps médical («~\textit{Doctors List}~»).
+  \item \textbf{Indicateurs Statistiques Globaux}~: En haut de la zone centrale, trois cartes dynamiques affichent en temps réel les indicateurs clés de performance (KPI) extraits de la base de données MySQL~:
+  \begin{itemize}
+    \item \textit{Doctors}~: Le nombre total de professionnels de santé enregistrés sur la plateforme (ex. «~\textit{15}~»).
+    \item \textit{Appointments}~: Le volume global de réservations de consultations effectuées par les patients (ex. «~\textit{27}~»).
+    \item \textit{Patients}~: Le nombre d'utilisateurs uniques ayant créé un profil sur le système (ex. «~\textit{10}~»).
+  \end{itemize}
+  \item \textbf{Suivi des Dernières Réservations (\textit{Latest Bookings})}~: Le corps principal de la page présente un flux d'activité listant de manière chronologique les rendez-vous récents. Chaque ligne affiche la photographie du médecin concerné, son nom (ex. Thomas Dubois, Sophie Martin, Lucas Bernard), la date de consultation planifiée ainsi que l'âge du patient.
+  \item \textbf{Modération et Actions Métiers}~: Pour chaque ligne du flux, l'administrateur dispose de contrôles interactifs pour superviser l'état du rendez-vous~:
+  \begin{itemize}
+    \item Une icône de bouton d'annulation rouge («~\textit{X}~») permet de rejeter ou d'annuler manuellement une réservation.
+    \item Si le rendez-vous a déjà été traité, l'interface adapte dynamiquement son affichage en remplaçant le bouton par une mention textuelle explicite colorée en rouge («~\textit{Cancelled}~») afin de figer visuellement l'état final de la ligne.
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{DashboardAdmin.png}
+\caption{Interface du tableau de bord d'administration générale avec indicateurs statistiques et flux d'activité}
+\label{fig:admin_dashboard}
+\end{figure}
+
+\subsubsection{Interface de Gestion Globale des Réservations (All Appointments)}
+Le module «~\textit{Appointments}~» du panneau d'administration centralise l'exhaustivité des réservations effectuées sur la plateforme Prescripto, offrant à l'administrateur un contrôle total sur le flux des consultations~:
+\begin{itemize}
+  \item \textbf{Structure du Tableau de Suivi}~: Les données sont organisées au sein d'un tableau structuré en sept colonnes claires~: le numéro indexé (\#), l'identité visuelle et textuelle du patient, son âge, la date et l'heure exactes de la consultation, le médecin assigné, le montant des honoraires (\textit{Fees}) et les actions de modération disponibles.
+  \item \textbf{Suivi des États de Consultation}~: L'interface applique des règles de gestion dynamiques pour refléter l'état réel de chaque rendez-vous en base de données à l'aide de badges colorés explicites~:
+  \begin{itemize}
+    \item \textit{Cancelled (Rouge)}~: Indique les rendez-vous qui ont été annulés, soit à l'initiative du patient depuis son espace personnel, soit par décision administrative (ex. lignes 1, 5, 6, 7).
+    \item \textit{Completed (Vert)}~: Confirme que la consultation a bien eu lieu et que le cycle du rendez-vous est clôturé avec succès (ex. ligne 2, Dr. Emily Larson).
+  \end{itemize}
+  \item \textbf{Droits de Modération et d'Annulation Directe}~: Pour l'ensemble des rendez-vous encore actifs ou en attente (ex. lignes 3, 4, 8, 9), l'administrateur détient le droit exclusif de révoquer la réservation. En cliquant sur l'icône circulaire rouge («~\textit{X}~»), une requête SQL est transmise pour mettre à jour instantanément le statut en arrière-plan, basculant la ligne concernée vers l'état figé «~\textit{Cancelled}~» afin de libérer la plage horaire.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AppointAdmin.png}
+\caption{Interface d'administration « All Appointments » permettant le suivi et la modération des états de rendez-vous}
+\label{fig:admin_all_appointments}
+\end{figure}
+
+\subsubsection{Interface d’Ajout et d’Onboarding de Praticiens (Add Doctor)}
+Pour enrichir l’offre de soins de la plateforme, l’administrateur dispose d’un module de création de profils médicaux hautement encadré~:
+\begin{itemize}
+  \item \textbf{Formulaire de Saisie Métier}~: L'interface expose un ensemble de champs structurés permettant de configurer l'identité et le contrat de travail du médecin. L'administrateur renseigne obligatoirement le nom complet, l'adresse e-mail professionnelle, un mot de passe initial, le nombre d'années d'expérience, le montant de la consultation (\textit{Fees}), une biographie de présentation (\textit{About Doctor}) ainsi que l'adresse physique de son cabinet.
+  \item \textbf{Sélection des Paramètres Systèmes}~: Deux éléments clés conditionnent l'intégration du médecin dans l'application~:
+  \begin{itemize}
+    \item \textit{Speciality}~: Un menu déroulant permet d'assigner le praticien à sa discipline réglementée (ex. General physician, Gynecologist, etc.) pour garantir le bon fonctionnement des filtres de recherche côté patient.
+    \item \textit{Doctor Picture}~: Une zone de téléversement (\textit{Upload}) permet d'associer une photographie officielle au profil pour l'affichage des cartes dynamiques.
+  \end{itemize}
+  \item \textbf{Validation et Droits d'Accès}~: En cliquant sur le bouton «~\textit{Add doctor}~», les informations sont soumises à la Servlet JEE. Après validation des formats et vérification de l'unicité de l'e-mail, la couche DAO persiste les données dans la table MySQL. Cette action génère automatiquement les droits d'accès nécessaires pour que le médecin puisse, à son tour, utiliser l'interface d'authentification (\textit{Doctor Login}) et gérer son propre tableau de bord.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{AddDoctor.png}
+\caption{Interface d'administration pour l'enregistrement et l'onboarding d'un nouveau médecin}
+\label{fig:admin_add_doctors}
+\end{figure}
+
+\subsubsection{Scénario d’Utilisation : Gestion des Droits de Disponibilité des Praticiens}
+Ce scénario décrit la cinématique métier permettant à l'administrateur de révoquer ou de suspendre temporairement la visibilité d'un médecin sur la plateforme grand public :
+
+\begin{enumerate}
+  \item \textbf{Navigation et Cartographie} : L'administrateur accède au panneau latéral gauche et clique sur l'onglet «~\textit{Doctors List}~». L'application charge dynamiquement l'ensemble des fiches des praticiens enregistrés dans la base de données MySQL sous forme de cartes d'identité visuelles.
+  \item \textbf{Altération du Statut d'Activité} : Chaque carte d'un médecin (ex. Dr. Emily Larson) expose une case à cocher interactive nommée «~\textit{Available}~». 
+  \begin{itemize}
+    \item Par défaut, un médecin actif possède le statut coché (\textit{True}), lui permettant d'apparaître dans les filtres de recherche des patients.
+    \item Lorsque l'administrateur décoche cette case, l'état bascule instantanément à \textit{False}.
+  \end{itemize}
+  \item \textbf{Persistance et Impact Système} : L'action de décocher déclenche une requête asynchrone vers le contrôleur JEE. La couche DAO exécute une requête de mise à jour (\textit{UPDATE}) sur l'attribut de disponibilité du médecin ciblé dans la base de données. 
+  \item \textbf{Conséquence Métier} : Le praticien concerné perd immédiatement le droit d'être affiché dans la liste des «~\textit{Top Doctors to Book}~» et devient introuvable lors d'une recherche par spécialité côté patient, empêchant ainsi toute nouvelle prise de rendez-vous intempestive pendant son absence.
+\end{enumerate}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.85\textwidth]{listDoctor.png}
+\caption{Interface de gestion des listes et modification des droits de disponibilité des médecins}
+\label{fig:admin_list_doctors}
+\end{figure}
+
+\subsubsection{Interface et Indicateurs du Tableau de Bord Praticien (Doctor Dashboard)}
+Une fois authentifié sur son portail dédié, le professionnel de santé est dirigé vers un tableau de bord analytique centralisant ses indicateurs de performance et l'état de son activité clinique en temps réel :
+
+\begin{enumerate}
+  \item \textbf{Bloc des Métriques Clés (Statistics Cards)} : La partie supérieure de l'interface agrège les données fondamentales extraites dynamiquement de la base de données MySQL par la couche de persistance :
+  \begin{itemize}
+    \item \textit{Earnings} (Gains cumulés) : Affiche les honoraires totaux perçus par le médecin sur la base des consultations complétées (ex. \$60). Cet indicateur est mis à jour par une fonction d'agrégation (\textit{SUM}) au niveau du DAO JEE dès qu'un rendez-vous change d'état.
+    \item \textit{Appointments} (Volume de réservations) : Quantifie le nombre total de fiches de rendez-vous enregistrées et associées à son identifiant unique de praticien.
+    \item \textit{Patients} (File active) : Représente le nombre de patients distincts ayant contracté au moins une réservation avec ce cabinet, permettant d'évaluer la fidélisation de la patientèle.
+  \end{itemize}
+  
+  \item \textbf{Flux Opérationnel des Réservations (\textit{Latest Bookings})} : La section centrale liste chronologiquement les dernières interactions de prise de rendez-vous. Pour chaque entrée, l'interface affiche le nom du patient, sa photo de profil, la date planifiée ainsi que son âge.
+  
+  \item \textbf{Logique Métier et Boutons de Changement d’État} : L'affichage des actions s'adapte dynamiquement en fonction du cycle de vie du rendez-vous, géré côté backend :
+  \begin{itemize}
+    \item \textbf{Rendez-vous Annulé} : Mentionne explicitement le statut \textit{Cancelled} en rouge si l'action émane du patient ou de l'administration.
+    \item \textbf{Rendez-vous Validé} : Affiche le libellé \textit{Completed} en vert lorsque la consultation médicale a été finalisée de manière effective.
+    \item \textbf{Rendez-vous En Attente} : Expose deux boutons d'action instantanés (une croix rouge d'annulation et une coche verte de complétion). Un clic sur la coche verte déclenche une requête asynchrone qui met à jour le tuple dans MySQL, incrémente instantanément la carte des gains (\textit{Earnings}) et verrouille l'état de la ligne pour le praticien.
+  \end{itemize}
+\end{enumerate}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{DashboardDoctor.png}
+\caption{Tableau de bord du médecin affichant les indicateurs statistiques et le module de validation des rendez-vous}
+\label{fig:doctor_dashboard_analytics}
+\end{figure}
+
+\subsubsection{Interface de Suivi et de Validation Globale des Rendez-vous (Doctor Appointments)}
+Pour une gestion exhaustive de son agenda, le médecin dispose d'un espace dédié répertoriant l'historique complet ainsi que les sollicitations de consultations médicales en attente :
+
+\begin{itemize}
+  \item \textbf{Structure de la Table Métier} : Les données sont présentées sous la forme d'un tableau structuré, alimenté dynamiquement via des requêtes de jointure complexes (incluant les entités \textit{Patient} et \textit{Appointment}) au niveau du backend JEE. Chaque ligne comptabilise les informations essentielles~: l'index incrémental, l'avatar et le nom complet du patient (ex. Oussama Andrew), la méthode de transaction sélectionnée, l'âge du patient, la date ainsi que l'heure précise de la séance, et enfin le montant des honoraires (\textit{Fees}).
+  
+  \item \textbf{Indicateur du Mode de Règlement} : L'interface intègre un badge dynamique explicitant le choix de facturation du patient (ex. \textit{CASH} ou \textit{CARD}). Cette donnée permet au médecin d'anticiper les modalités administratives lors de l'accueil physique au cabinet.
+  
+  \item \textbf{Cinématique des Actions Métier (Confirmer / Annuler)} : La colonne terminale «~\textit{Action}~» représente le nœud décisionnel du cycle de vie du rendez-vous, proposant des contrôles contextuels selon l'état actuel de la ligne~:
+  \begin{itemize}
+    \item \textbf{Actions en Attente} : Si le rendez-vous n'a pas encore été traité, deux boutons d'action asynchrones sont exposés. Le bouton vert (coche) permet de \textit{confirmer / compléter} la consultation, tandis que le bouton rouge (croix) permet de l'\textit{annuler}. Un clic sur l'un de ces éléments transmet l'ordre au contrôleur JEE pour modifier l'état persistant dans la base MySQL.
+    \item \textbf{États Verrouillés} : Une fois l'action enregistrée, le système applique un rafraîchissement d'état et fige la ligne. Le message vert «~\textit{Completed}~» ou le message rouge «~\textit{Cancelled}~» se substitue aux boutons, empêchant toute modification ultérieure et assurant l'intégrité des données d'audit de la clinique.
+  \end{itemize}
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{AppointDoctor.png}
+\caption{Vue complète du module de gestion, de confirmation et d'annulation des rendez-vous du médecin}
+\label{fig:doctor_appointments_management}
+\end{figure}
+
+\subsubsection{Interface de Gestion et de Modification du Profil Praticien (Doctor Profile)}
+Pour garantir l'exactitude de ses informations publiques et administratives, le médecin dispose d'un espace de gestion de profil personnel («~\textit{My Profile}~»)~:
+
+\begin{itemize}
+  \item \textbf{Visualisation des Informations Institutionnelles} : L'interface affiche de manière claire et figée les éléments clés saisis lors de son enregistrement initial par l'administration~: sa photographie officielle, sa spécialité réglementée (ex. \textit{Gynecologist}), son diplôme (ex. \textit{MBBS}), son niveau d'expérience (ex. \textit{3 year}) ainsi que le montant fixe de ses honoraires de consultation (ex. \textit{\$60}).
+  
+  \item \textbf{Gestion Autonome de la Disponibilité Clinique} : Le médecin a le pouvoir de modifier son statut de disponibilité en temps réel via une case à cocher dédiée «~\textit{Available}~». 
+  \begin{itemize}
+    \item Si le médecin décoche cette case, l'état passe à \textit{False} en base de données. Cela désactive instantanément sa visibilité sur le portail d'accueil des patients, bloquant toute nouvelle prise de rendez-vous imprévue (en cas d'urgence ou de congé).
+  \end{itemize}
+  
+  \item \textbf{Champs Éditables et Mise à Jour (\textit{Edit Profile})} : Deux blocs majeurs restent modifiables par le praticien pour refléter les changements de son activité courante~:
+  \begin{itemize}
+    \item \textit{Address}~: L'adresse textuelle complète de son cabinet de consultation (ex. \textit{27th Cross, Richmond Circle, Ring Road, London}).
+    \item \textit{About Doctor}~: Un espace textuel libre permettant de mettre à jour son résumé de compétences ou ses consignes cliniques particulières.
+  \end{itemize}
+  
+  \item \textbf{Cinématique de Persistance} : En cliquant sur le bouton de soumission situé au bas du formulaire, les modifications locales portées sur l'adresse, la biographie ou la disponibilité sont transmises via une requête HTTP POST asynchrone vers le contrôleur JEE. La couche DAO exécute une requête \textit{UPDATE} ciblée sur la table des médecins dans MySQL, renvoyant un message de confirmation au frontend React pour valider graphiquement le succès de l'opération.
+\end{itemize}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{EditDoctor.png}
+\caption{Interface de consultation et de modification du profil professionnel du médecin}
+\label{fig:doctor_edit_profile}
+\end{figure}
+
+
+\subsection*{Conclusion}
+\addcontentsline{toc}{subsection}{Conclusion}
+
+Ce quatrième chapitre a présenté la concrétisation technique de la plateforme \textbf{Prescripto}. L'application s'appuie sur une architecture MVC claire associant la flexibilité de React.js à la robustesse éprouvée des Servlets JEE et de l'interfaçage JDBC avec MySQL. Les interfaces réalisées répondent rigoureusement aux besoins ergonomiques et métiers formulés, offrant une solution viable, fluide et allégée pour la gestion moderne des rendez-vous médicaux en clinique.
+
+% ══════════════════════════════════════════════════════════════
+%   CONCLUSION GÉNÉRALE
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section*{Conclusion Générale}
+\addcontentsline{toc}{section}{Conclusion Générale}
+\markboth{Conclusion Générale}{Conclusion Générale}
+
+\subsection*{Réalisations}
+\addcontentsline{toc}{subsection}{Réalisations}
+
+Ce projet de fin d'études a abouti à la conception, au développement et à l'implémentation de la plateforme de e-santé \textbf{Prescripto}, une solution fullstack fonctionnelle reposant sur le principe fondamental de séparation des préoccupations (\textit{Separation of Concerns}). Cette rigueur architecturale est matérialisée par l'alliance d'une interface utilisateur dynamique, réactive et ergonomique en \textbf{React.js}, et d'un noyau métier backend robuste orchestré par des \textbf{Servlets JEE}, le patron de conception \textbf{DAO} et une persistance \textbf{JDBC} sous \textbf{MySQL}. 
+
+Les travaux réalisés ont permis de couvrir l'ensemble du cycle de vie du projet, incluant la mise en œuvre réussie d'un système d'authentification et de routage sécurisé multi-rôles, le filtrage dynamique et instantané des praticiens, ainsi que l'automatisation globale du cycle de réservation et de modification des créneaux médicaux.
+
+\subsection*{Limites}
+\addcontentsline{toc}{subsection}{Limites}
+
+Malgré les excellents résultats obtenus lors des phases de tests fonctionnels et d'intégration, notre solution présente une limite inhérente au périmètre initial du cahier des charges~:
+\begin{itemize}
+  \item \textbf{Absence de passerelle de paiement en ligne~:} L'application s'appuie exclusivement sur un modèle de paiement physique directement au comptoir de la clinique. Bien qu'il s'agisse d'un choix stratégique délibéré visant à garantir la simplicité de l'infrastructure logicielle et à éliminer les frais de transaction pour les petites structures, cela nécessite une action de validation administrative manuelle lors de l'arrivée physique du patient au cabinet.
+\end{itemize}
+
+\subsection*{Perspectives}
+\addcontentsline{toc}{subsection}{Perspectives}
+
+Afin d'étendre les capacités fonctionnelles et d'optimiser l'évolutivité de la plateforme \textbf{Prescripto}, plusieurs axes de développement à court et moyen terme sont envisagés~:
+\begin{itemize}
+  \item \textbf{Module de messagerie instantanée~:} Intégrer un système de chat en temps réel (via le protocole \textit{WebSockets}) pour fluidifier, centraliser et sécuriser la communication directe entre le médecin et son patient en amont ou en aval de la consultation.
+  \item \textbf{Module de Téléconsultation~:} Mettre en place une passerelle de visioconférence WebRTC intégrée afin de permettre la tenue de consultations médicales à distance.
+  \item \textbf{Portabilité mobile native~:} Développer une application mobile multiplateforme (via \textit{React Native}) pour enrichir l'expérience utilisateur et automatiser l'envoi de rappels de rendez-vous par notifications push.
+\end{itemize}
+
+\subsection*{Conclusion}
+\addcontentsline{toc}{subsection}{Conclusion}
+
+Ce projet de fin d'études aura constitué une expérience académique, professionnelle et humaine hautement formatrice. Sur le plan technique, il nous a permis de consolider la maîtrise d'une stack technologique moderne découplée et d'éprouver la rigueur de l'architecture MVC. Sur le plan organisationnel, l'adoption de la méthodologie Agile Scrum a renforcé notre synergie d'équipe dans le respect des jalons et des livrables. 
+
+La plateforme développée pose ainsi des fondations logicielles solides, modulaires et évolutives, répondant avec pertinence aux exigences contemporaines de la transformation digitale du secteur médical au Maroc.
+
+% ══════════════════════════════════════════════════════════════
+%   RÉFÉRENCES BIBLIOGRAPHIQUES
+% ══════════════════════════════════════════════════════════════
+\newpage
+\section*{Références bibliographiques}
+\addcontentsline{toc}{section}{Références bibliographiques}
+\markboth{Références bibliographiques}{Références bibliographiques}
+
+\begin{enumerate}
+    \item \textbf{ORACLE.} \textit{Java Platform, Enterprise Edition (Java EE) Specification and Documentation}. Oracle Help Center. 
+    \newline Disponible sur~: \url{https://docs.oracle.com/javaee/} [Consulté en mai 2026].
+
+    \item \textbf{META OPEN SOURCE.} \textit{React.js Official Guide, Component-Driven User Interfaces Documentation}. Meta Platforms Inc. 
+    \newline Disponible sur~: \url{https://react.dev/} [Consulté en mai 2026].
+
+    \item \textbf{TAILWIND LABS.} \textit{TailwindCSS - Utility-First CSS Framework Documentation}. 
+    \newline Disponible sur~: \url{https://tailwindcss.com/} [Consulté en mai 2026].
+
+    \item \textbf{OBJECT MANAGEMENT GROUP (OMG).} \textit{Unified Modeling Language (UML) Specification, Version 2.5.1}. OMG Document Formal. 
+    \newline Disponible sur~: \url{https://www.uml.org/} [Consulté en mai 2026].
+
+    \item \textbf{PROJECT MANAGEMENT INSTITUTE (PMI).} \textit{Agile Practice Guide}. Newtown Square, Pennsylvania: Project Management Institute, 2017. ISBN: 978-1628251999.
+    \newline Disponible sur~: \url{https://www.pmi.org/} [Consulté en mai 2026].
+\end{enumerate}
+
+\vfill
+\end{document}
