@@ -30,5 +30,17 @@ pipeline {
                 }
             }
         }
+
+        stage('Déploiement Docker') {
+            steps {
+                dir('backend') {
+                    // Simulation du déploiement Docker (Mock) pour validation visuelle
+                    echo 'docker build -t prescripto-api .'
+                    echo 'docker rm -f prescripto-backend || true'
+                    echo 'docker run -d --name prescripto-backend -p 8081:8080 prescripto-api'
+                    echo '🚀 Déploiement Docker (Simulé) réussi avec succès !'
+                }
+            }
+        }
     }
 }
