@@ -1,0 +1,283 @@
+Started by user ahdi aya
+Obtained Jenkinsfile from git https://github.com/AyaAhdi/prescripto-fullstack.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/prescripto-pipeline
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Checkout SCM)
+[Pipeline] checkout
+The recommended git tool is: git
+using credential github-token
+ > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/prescripto-pipeline/.git # timeout=10
+Fetching changes from the remote Git repository
+ > git config remote.origin.url https://github.com/AyaAhdi/prescripto-fullstack.git # timeout=10
+Fetching upstream changes from https://github.com/AyaAhdi/prescripto-fullstack.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.47.3'
+using GIT_ASKPASS to set credentials 
+ > git fetch --tags --force --progress -- https://github.com/AyaAhdi/prescripto-fullstack.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git rev-parse refs/remotes/origin/main^{commit} # timeout=10
+Checking out Revision 6bcb617525eb4b3b9a2da6048093c140245c6a7d (refs/remotes/origin/main)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f 6bcb617525eb4b3b9a2da6048093c140245c6a7d # timeout=10
+Commit message: "feat: add Dockerfiles for backend and frontend"
+ > git rev-list --no-walk 6bcb617525eb4b3b9a2da6048093c140245c6a7d # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Declarative: Tool Install)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Build & Test)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/prescripto-pipeline/backend
+[Pipeline] {
+[Pipeline] sh
++ mvn clean verify -DskipTests
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.prescripto:backend >-----------------------
+[INFO] Building backend 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- clean:3.2.0:clean (default-clean) @ backend ---
+[INFO] Deleting /var/jenkins_home/workspace/prescripto-pipeline/backend/target
+[INFO] 
+[INFO] --- resources:3.4.0:resources (default-resources) @ backend ---
+[INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/prescripto-pipeline/backend/src/main/resources
+[INFO] 
+[INFO] --- compiler:3.15.0:compile (default-compile) @ backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 12 source files with javac [debug target 1.8] to target/classes
+[WARNING] bootstrap class path not set in conjunction with -source 8
+[WARNING] source value 8 is obsolete and will be removed in a future release
+[WARNING] target value 8 is obsolete and will be removed in a future release
+[WARNING] To suppress warnings about obsolete options, use -Xlint:-options.
+[INFO] 
+[INFO] --- resources:3.4.0:testResources (default-testResources) @ backend ---
+[INFO] skip non existing resourceDirectory /var/jenkins_home/workspace/prescripto-pipeline/backend/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.15.0:testCompile (default-testCompile) @ backend ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 3 source files with javac [debug target 1.8] to target/test-classes
+[WARNING] bootstrap class path not set in conjunction with -source 8
+[WARNING] source value 8 is obsolete and will be removed in a future release
+[WARNING] target value 8 is obsolete and will be removed in a future release
+[WARNING] To suppress warnings about obsolete options, use -Xlint:-options.
+[INFO] 
+[INFO] --- surefire:3.5.4:test (default-test) @ backend ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- war:3.3.2:war (default-war) @ backend ---
+[INFO] Packaging webapp
+[INFO] Assembling webapp [backend] in [/var/jenkins_home/workspace/prescripto-pipeline/backend/target/backend]
+[INFO] Processing war project
+[INFO] Copying webapp resources [/var/jenkins_home/workspace/prescripto-pipeline/backend/src/main/webapp]
+[INFO] Building war: /var/jenkins_home/workspace/prescripto-pipeline/backend/target/backend.war
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  36.875 s
+[INFO] Finished at: 2026-06-21T21:02:03Z
+[INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Analyse SonarQube)
+[Pipeline] withCredentials
+Masking supported pattern matches of $SONAR_TOKEN
+[Pipeline] {
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/prescripto-pipeline/backend
+[Pipeline] {
+[Pipeline] sh
++ mvn org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Prescripto-Backend -Dsonar.projectName=Prescripto-Backend -Dsonar.host.url=http://host.docker.internal:9000 -Dsonar.token=****
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------------< com.prescripto:backend >-----------------------
+[INFO] Building backend 1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ war ]---------------------------------
+[INFO] 
+[INFO] --- sonar:5.7.0.6970:sonar (default-cli) @ backend ---
+[WARNING] Using an unspecified version instead of an explicit plugin version may introduce breaking analysis changes at an unwanted time. It is highly recommended to use an explicit version, e.g. 'org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970'.
+[INFO] Java 21.0.11 Eclipse Adoptium (64-bit)
+[INFO] Linux 6.6.87.2-microsoft-standard-WSL2 (amd64)
+[INFO] Communicating with SonarQube Server 9.9.8.100196
+[INFO] Load global settings
+[INFO] Load global settings (done) | time=400ms
+[INFO] Server id: 147B411E-AZ7nJD2pO_KTjgLDctaY
+[INFO] User cache: /var/jenkins_home/.sonar/cache
+[INFO] Load/download plugins
+[INFO] Load plugins index
+[INFO] Load plugins index (done) | time=374ms
+[INFO] Load/download plugins (done) | time=2092ms
+[INFO] Process project properties
+[INFO] Process project properties (done) | time=116ms
+[INFO] Execute project builders
+[INFO] Execute project builders (done) | time=4ms
+[INFO] Project key: Prescripto-Backend
+[INFO] Base dir: /var/jenkins_home/workspace/prescripto-pipeline/backend
+[INFO] Working dir: /var/jenkins_home/workspace/prescripto-pipeline/backend/target/sonar
+[INFO] Load project settings for component key: 'Prescripto-Backend'
+[INFO] Load project settings for component key: 'Prescripto-Backend' (done) | time=51ms
+[INFO] Auto-configuring with CI 'Jenkins'
+[INFO] Load quality profiles
+[INFO] Load quality profiles (done) | time=214ms
+[INFO] Load active rules
+[INFO] Load active rules (done) | time=5200ms
+[INFO] Load analysis cache
+[INFO] Load analysis cache (398 bytes) | time=67ms
+[INFO] Load project repositories
+[INFO] Load project repositories (done) | time=69ms
+[INFO] Indexing files...
+[INFO] Project configuration:
+[INFO] 18 files indexed
+[INFO] 0 files ignored because of scm ignore settings
+[INFO] Quality profile for java: Sonar way
+[INFO] Quality profile for web: Sonar way
+[INFO] Quality profile for xml: Sonar way
+[INFO] ------------- Run sensors on module Prescripto-Backend
+[INFO] Load metrics repository
+[INFO] Load metrics repository (done) | time=80ms
+[INFO] Sensor JavaSensor [java]
+[INFO] Configured Java source version (sonar.java.source): 8
+[INFO] JavaClasspath initialization
+[INFO] JavaClasspath initialization (done) | time=32ms
+[INFO] JavaTestClasspath initialization
+[INFO] JavaTestClasspath initialization (done) | time=54ms
+[INFO] Server-side caching is enabled. The Java analyzer will not try to leverage data from a previous analysis.
+[INFO] Using ECJ batch to parse 12 Main java source files with batch size 102 KB.
+[INFO] Starting batch processing.
+[INFO] The Java analyzer cannot skip unchanged files in this context. A full analysis is performed for all files.
+[INFO] 91% analyzed
+[INFO] 100% analyzed
+[INFO] Batch processing: Done.
+[INFO] Did not optimize analysis for any files, performed a full analysis for all 12 files.
+[INFO] Using ECJ batch to parse 3 Test java source files with batch size 102 KB.
+[INFO] Starting batch processing.
+[INFO] 100% analyzed
+[INFO] Batch processing: Done.
+[INFO] Did not optimize analysis for any files, performed a full analysis for all 3 files.
+[INFO] No "Generated" source files to scan.
+[INFO] Sensor JavaSensor [java] (done) | time=13287ms
+[INFO] Sensor JaCoCo XML Report Importer [jacoco]
+[INFO] 'sonar.coverage.jacoco.xmlReportPaths' is not defined. Using default locations: target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml,build/reports/jacoco/test/jacocoTestReport.xml
+[INFO] No report imported, no coverage information will be imported by JaCoCo XML Report Importer
+[INFO] Sensor JaCoCo XML Report Importer [jacoco] (done) | time=7ms
+[INFO] Sensor CSS Rules [javascript]
+[WARNING] Error when running: 'node -v'. Is Node.js available during analysis?
+[INFO] Hit the cache for 0 out of 0
+[INFO] Miss the cache for 0 out of 0
+[INFO] Sensor CSS Rules [javascript] (done) | time=399820ms
+[INFO] Sensor C# Project Type Information [csharp]
+[INFO] Sensor C# Project Type Information [csharp] (done) | time=3ms
+[INFO] Sensor C# Analysis Log [csharp]
+[INFO] Sensor C# Analysis Log [csharp] (done) | time=48ms
+[INFO] Sensor C# Properties [csharp]
+[INFO] Sensor C# Properties [csharp] (done) | time=0ms
+[INFO] Sensor SurefireSensor [java]
+[INFO] parsing [/var/jenkins_home/workspace/prescripto-pipeline/backend/target/surefire-reports]
+[INFO] Sensor SurefireSensor [java] (done) | time=5ms
+[INFO] Sensor HTML [web]
+[INFO] Sensor HTML [web] (done) | time=138ms
+[INFO] Sensor XML Sensor [xml]
+[INFO] 2 source files to be analyzed
+[INFO] 2/2 source files have been analyzed
+[INFO] Sensor XML Sensor [xml] (done) | time=440ms
+[INFO] Sensor TextAndSecretsSensor [text]
+[INFO] 18 source files to be analyzed
+[INFO] 18/18 source files have been analyzed
+[INFO] Sensor TextAndSecretsSensor [text] (done) | time=186ms
+[INFO] Sensor VB.NET Project Type Information [vbnet]
+[INFO] Sensor VB.NET Project Type Information [vbnet] (done) | time=3ms
+[INFO] Sensor VB.NET Analysis Log [vbnet]
+[INFO] Sensor VB.NET Analysis Log [vbnet] (done) | time=32ms
+[INFO] Sensor VB.NET Properties [vbnet]
+[INFO] Sensor VB.NET Properties [vbnet] (done) | time=1ms
+[INFO] Sensor IaC Docker Sensor [iac]
+[INFO] 0 source files to be analyzed
+[INFO] 0/0 source files have been analyzed
+[INFO] Sensor IaC Docker Sensor [iac] (done) | time=139ms
+[INFO] ------------- Run sensors on project
+[INFO] Sensor Analysis Warnings import [csharp]
+[INFO] Sensor Analysis Warnings import [csharp] (done) | time=2ms
+[INFO] Sensor Zero Coverage Sensor
+[INFO] Sensor Zero Coverage Sensor (done) | time=80ms
+[INFO] Sensor Java CPD Block Indexer
+[INFO] Sensor Java CPD Block Indexer (done) | time=193ms
+[INFO] CPD Executor Calculating CPD for 13 files
+[INFO] CPD Executor CPD calculation finished (done) | time=73ms
+[INFO] Analysis report generated in 430ms, dir size=249.4 kB
+[INFO] Analysis report compressed in 3835ms, zip size=73.5 kB
+[INFO] Analysis report uploaded in 129ms
+[INFO] ANALYSIS SUCCESSFUL, you can find the results at: http://host.docker.internal:9000/dashboard?id=Prescripto-Backend
+[INFO] Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+[INFO] More about the report processing at http://host.docker.internal:9000/api/ce/task?id=AZ7sBRnDj1hLptgppwaX
+[INFO] Analysis total time: 8:25.007 s
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  08:53 min
+[INFO] Finished at: 2026-06-21T21:11:25Z
+[INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Déploiement Docker)
+[Pipeline] tool
+[Pipeline] envVarsForTool
+[Pipeline] withEnv
+[Pipeline] {
+[Pipeline] dir
+Running in /var/jenkins_home/workspace/prescripto-pipeline/backend
+[Pipeline] {
+[Pipeline] echo
+docker build -t prescripto-api .
+[Pipeline] echo
+docker rm -f prescripto-backend || true
+[Pipeline] echo
+docker run -d --name prescripto-backend -p 8081:8080 prescripto-api
+[Pipeline] echo
+🚀 Déploiement Docker (Simulé) réussi avec succès !
+[Pipeline] }
+[Pipeline] // dir
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // withEnv
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
